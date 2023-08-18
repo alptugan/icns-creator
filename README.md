@@ -43,17 +43,20 @@ Please ensure that your contributions adhere to the [Code of Conduct](https://gi
 
 ## License
 
-icns Creator is released under the [MIT License](https://opensource.org/licenses/MIT). See the [LICENSE](https://github.com/username/repository/blob/main/LICENSE) file for more information.
+icns Creator is released under the [MIT License](https://opensource.org/licenses/MIT). See the [LICENSE](https://github.com/alptugan/icns-creator/blob/main/LICENSE.md) file for more information.
 
 ## Acknowledgements
 
 - The icns Creator app was inspired by the need for a simple and efficient tool to create icns files for macOS applications.
-- Special thanks to the contributors and supporters of the project who have helped improve and maintain icns Creator.
+
 
 ## Contact
 
-If you have any questions, suggestions, or feedback, please feel free to reach out to us at [email@example.com](mailto:email@example.com).
+If you have any questions, suggestions, or feedback, please feel free to use Issues section.
 
-______________________________________________________________________
+_________________________________________________
 
-Thank you for using icns Creator! We hope this tool simplifies the process of creating icns files for your macOS applications.
+## To do 
+- [x] App release
+- [ ] Set the icons using the app. 
+- [ ] Drag & drop files onto the app window.
