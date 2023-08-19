@@ -11,7 +11,6 @@ struct ContentView: View {
     @State private var isToggled_All = true
     @State private var isToggled_16 = true
     @State private var isToggled_32 = true
-    @State private var isToggled_64 = true
     @State private var isToggled_128 = true
     @State private var isToggled_256 = true
     @State private var isToggled_512 = true
@@ -27,6 +26,7 @@ struct ContentView: View {
     var body: some View {
         
         VStack {
+            
             if let imagePath = imagePath, let image = NSImage(contentsOfFile: imagePath) {
                 Image(nsImage: image)
                     .resizable()
@@ -34,6 +34,11 @@ struct ContentView: View {
                     .frame(width: imgW, height: imgH)
             } else {
                 Text("No image selected")
+            }
+            
+            // If no file is selected
+            if imagePath == nil {
+                showBrowseButton()
             }
             
             /*if imagePath != nil {
@@ -55,14 +60,13 @@ struct ContentView: View {
                             newValue in
                             isToggled_16 = !isToggled_16
                             isToggled_32 = !isToggled_32
-                            isToggled_64 = !isToggled_64
                             isToggled_128 = !isToggled_128
                             isToggled_256 = !isToggled_256
                             isToggled_512 = !isToggled_512
                         }
                     Toggle("16x16", isOn: $isToggled_16)
                     Toggle("32x32", isOn: $isToggled_32)
-                    //Toggle("64x64", isOn: $isToggled_64)
+                    
                 }
                 HStack {
                     Toggle("128x128", isOn: $isToggled_128)
@@ -70,54 +74,37 @@ struct ContentView: View {
                     Toggle("512x512", isOn: $isToggled_512)
                 }
                 
-                Button("Generate .icns") {
-                    //resizeAndSaveImage(imagePath: imagePath, width: imgW, height: imgW)
-                    //print("Toggle 1 value: \(isToggled_16)")
-                    if(isToggled_16 == true) {
-                        //resizeAndSaveImage(imagePath: imagePath, width: 16, height: 16)
-                        runShellCommand(res:16)
-                    }
-                    
-                    if(isToggled_32 == true) {
-                        runShellCommand(res:32)
-                    }
-                    
-                   /* if(isToggled_64 == true) {
-                        runShellCommand(res:64)
-                    }*/
-                    
-                    if(isToggled_128 == true) {
-                        runShellCommand(res:128)
-                    }
-                    
-                    if(isToggled_256 == true) {
-                        runShellCommand(res:256)
-                    }
-                    
-                    if(isToggled_512 == true) {
-                        runShellCommand(res:512)
-                    }
-                }
-                .padding(.maximum(0, 0))
-            }
-            
-            if imagePath == nil {
-                Button("Select Image") {
-                    let panel = NSOpenPanel()
-                    panel.allowedContentTypes = [.image]
-                    panel.canChooseFiles = true
-                    panel.canChooseDirectories = false
-                    panel.allowsMultipleSelection = false
-                    
-                    panel.begin { response in
-                        if response == .OK, let url = panel.urls.first {
-                            imagePath = url.path
-                            urlg = url
-                            print("Selected image path: \(imagePath ?? "")")
+                HStack {
+                    showBrowseButton()
+                    Button("Generate .icns") {
+                        //resizeAndSaveImage(imagePath: imagePath, width: imgW, height: imgW)
+                        //print("Toggle 1 value: \(isToggled_16)")
+                        if(isToggled_16 == true) {
+                            //resizeAndSaveImage(imagePath: imagePath, width: 16, height: 16)
+                            runShellCommand(res:16)
+                        }
+                        
+                        if(isToggled_32 == true) {
+                            runShellCommand(res:32)
+                        }
+                        
+                        if(isToggled_128 == true) {
+                            runShellCommand(res:128)
+                        }
+                        
+                        if(isToggled_256 == true) {
+                            runShellCommand(res:256)
+                        }
+                        
+                        if(isToggled_512 == true) {
+                            runShellCommand(res:512)
                         }
                     }
+                    .padding(.maximum(0, 0))
                 }
             }
+            
+            
             
             
             /*Button("Select Image") {
@@ -138,20 +125,43 @@ struct ContentView: View {
         }
     }
     
+    func  showBrowseButton() -> some View {
+        return Button("Select Image") {
+            let panel = NSOpenPanel()
+            panel.allowedContentTypes = [.image]
+            panel.canChooseFiles = true
+            panel.canChooseDirectories = false
+            panel.allowsMultipleSelection = false
+            
+            panel.begin { response in
+                if response == .OK, let url = panel.urls.first {
+                    imagePath = url.path
+                    urlg = url
+                    //print("Selected image path: \(imagePath ?? "")")
+                    let escapedImagePath = imagePath!.replacingOccurrences(of: " ", with: "\\ ")
+                    
+                    let escapedImagePath2 = imagePath!.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression)
+                    print("koko: \(escapedImagePath2 )")
+                }
+            }
+        }
+    }
     
     func runShellCommand(res: Int) {
 
         let process = Process()
-        let escapedImagePath = imagePath?.replacingOccurrences(of: " ", with: "\\ ")
+         let escapedImagePath = imagePath!.replacingOccurrences(of: " ", with: "\\ ")
+        //let escapedImagePath = imagePath?.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
+
         //let idd = escapedImagePath?.lastIndex(of: ".")
         //let fname = escapedImagePath.
         //let subi = escapedImagePath?[&idd...]
         
-        let escapedImagePath2 = imagePath?.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression)
+        let escapedImagePath2 = imagePath!.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
         
-        
-        let command = "sips -s format icns -z \(Int(res)) \(Int(res)) \(String(describing: escapedImagePath ?? "")) --out  \(String(describing: escapedImagePath2 ?? ""))\("_")\(String(res))\("x")\(String(res)).icns"
-        
+        //let command = "sips -s format icns -z " + String(res) + " " + String(escapedImagePath) + " --out " + String(escapedImagePath2!) + "_" + String(res) + "x" + String(res) + ".icns"
+        //let command = "sips -s format icns -z \(Int(res)) \(Int(res)) \(String(describing: escapedImagePath ?? "")) --out  \(String(describing: escapedImagePath2 ?? ""))\("_")\(String(res))\("x")\(String(res)).icns"
+        let command = "sips -s format icns -z \(res) \(res) \(String(describing:escapedImagePath )) --out \(escapedImagePath2)_\(String(res))x\(String(res)).icns"
         
         process.launchPath = "/bin/bash"
         process.arguments = ["-c", command]
@@ -169,7 +179,7 @@ struct ContentView: View {
         process.waitUntilExit()
         
         // Second pass for setting preview image
-        let command2 = "sips -i \(String(describing: escapedImagePath2 ?? ""))\("_")\(String(res))\("x")\(String(res)).icns \(String(describing: escapedImagePath2 ?? ""))\("_")\(String(res))\("x")\(String(res)).icns"
+        let command2 = "sips -i \(String(describing:escapedImagePath2 ))_\(String(res))x\(String(res)).icns \(String(describing:escapedImagePath2 ))_\(String(res))x\(String(res)).icns"
         
         let process2 = Process()
         process2.launchPath = "/bin/bash"
@@ -186,7 +196,6 @@ struct ContentView: View {
         }
         
         process2.waitUntilExit()
-
     }
     
     private func resizeAndSaveImage(imagePath: String, width: CGFloat, height: CGFloat) {
@@ -220,6 +229,10 @@ struct ContentView: View {
         newImage.unlockFocus()
         
         return newImage
+    }
+    
+    func orderFrontStandardAboutPanel(_ sender: Any?) {
+        
     }
 }
 

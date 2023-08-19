@@ -2,6 +2,25 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSDesktopFolderUsageDescription</key>
+	<string></string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string></string>
+	<key>NSDownloadsFolderUsageDescription</key>
+	<string></string>
+	<key>NSFileProviderDomainUsageDescription</key>
+	<string></string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<integer>1</integer>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
+		</dict>
+	</array>
 	<key>CFBundleIconFile</key>
 	<string>AppIcon</string>
 </dict>

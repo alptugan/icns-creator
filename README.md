@@ -1,4 +1,5 @@
 # icns Creator
+Download the app from [Releases](https://github.com/alptugan/icns-creator/releases/tag/master)
 
 ![icns Creator Logo](icns%20creator/icns_icon.png)
 
