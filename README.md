@@ -1,7 +1,10 @@
 # icns Creator
 Download the app from [Releases](https://github.com/alptugan/icns-creator/releases/tag/master)
 
-![icns Creator Logo](icns%20creator/icns_icon.png)
+[<img src="icns%20creator/icns_icon.png" width="20%">]()
+
+
+## DEMO & Instructions
 
 icns Creator is a macOS application that allows you to easily create icns files from any PNG or JPG image file. With this tool, you can quickly generate high-quality icns files to use as icons for your macOS applications.
 
