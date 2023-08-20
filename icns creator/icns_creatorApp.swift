@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(macOS 13.0, *)
 @main
 struct icns_creatorApp: App {
     var body: some Scene {
@@ -22,6 +23,5 @@ struct icns_creatorApp: App {
         //.defaultSize(CGSize(width: 600, height: 400))
         //.defaultPosition(.center)
         .windowResizability(.contentSize)
-        
     }
 }

@@ -68,5 +68,8 @@ _________________________________________________
 
 ## To do 
 - [x] App release
+- [x] Make it compatible with min Mac OS 10.13
 - [ ] Set the icons using the app. 
-- [ ] Drag & drop files onto the app window.
+- [ ] Drag & drop design files onto the app window.
+- [ ] Drag & drop folders or apps to edit their icns props on the fly for better UX
+- [ ] Distrubute through Homebrew

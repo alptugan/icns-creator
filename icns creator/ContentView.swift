@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(macOS 11.0, *)
 struct ContentView: View {
     @State private var isToggled_All = true
     @State private var isToggled_16 = true
@@ -22,6 +23,9 @@ struct ContentView: View {
     @State private var outputText = ""
     @State private var outputText2 = ""
 
+    var allTogglesOff: Bool {
+          return !isToggled_All && !isToggled_16 && !isToggled_32 && !isToggled_128 && !isToggled_256 && !isToggled_512
+    }
     
     var body: some View {
         
@@ -57,16 +61,19 @@ struct ContentView: View {
                 HStack {
                     Toggle("All", isOn: $isToggled_All)
                         .onChange(of: isToggled_All) {
+                        //.onReceive([isToggled_All].publisher) {
                             newValue in
-                            isToggled_16 = !isToggled_16
-                            isToggled_32 = !isToggled_32
-                            isToggled_128 = !isToggled_128
-                            isToggled_256 = !isToggled_256
-                            isToggled_512 = !isToggled_512
+                        //Toggle("All", isOn: $isToggled_All).onAppear {
+                            //if newValue {
+                                isToggled_16 = newValue
+                                isToggled_32 = newValue
+                                isToggled_128 = newValue
+                                isToggled_256 = newValue
+                                isToggled_512 = newValue
+                            //}
                         }
                     Toggle("16x16", isOn: $isToggled_16)
                     Toggle("32x32", isOn: $isToggled_32)
-                    
                 }
                 HStack {
                     Toggle("128x128", isOn: $isToggled_128)
@@ -101,6 +108,7 @@ struct ContentView: View {
                         }
                     }
                     .padding(.maximum(0, 0))
+                    .disabled(allTogglesOff)
                 }
             }
             
@@ -128,7 +136,8 @@ struct ContentView: View {
     func  showBrowseButton() -> some View {
         return Button("Select Image") {
             let panel = NSOpenPanel()
-            panel.allowedContentTypes = [.image]
+            //panel.allowedContentTypes = [.image]
+            panel.allowedFileTypes = ["png", "jpg", "jpeg", "gif"]
             panel.canChooseFiles = true
             panel.canChooseDirectories = false
             panel.allowsMultipleSelection = false
@@ -137,11 +146,6 @@ struct ContentView: View {
                 if response == .OK, let url = panel.urls.first {
                     imagePath = url.path
                     urlg = url
-                    //print("Selected image path: \(imagePath ?? "")")
-                    let escapedImagePath = imagePath!.replacingOccurrences(of: " ", with: "\\ ")
-                    
-                    let escapedImagePath2 = imagePath!.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression)
-                    print("koko: \(escapedImagePath2 )")
                 }
             }
         }
@@ -205,7 +209,8 @@ struct ContentView: View {
         
         // Save the resized image
         let savePanel = NSSavePanel()
-        savePanel.allowedContentTypes = [.image]
+        //savePanel.allowedContentTypes = [.image]
+        savePanel.allowedFileTypes = ["png", "jpg", "jpeg", "gif"]
         savePanel.nameFieldLabel = "Save Resized Image"
         
         savePanel.begin { response in
@@ -236,9 +241,12 @@ struct ContentView: View {
     }
 }
 
+@available(macOS 11.0, *)
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-            .preferredColorScheme(.dark)
+            //.preferredColorScheme(.dark)
+            .background(Color.black)
+
     }
 }
