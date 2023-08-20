@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-@available(macOS 11.0, *)
 struct ContentView: View {
     @State private var isToggled_All = true
     @State private var isToggled_16 = true
@@ -241,7 +240,6 @@ struct ContentView: View {
     }
 }
 
-@available(macOS 11.0, *)
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
