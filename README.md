@@ -1,6 +1,6 @@
 # icns Creator
 <p align="center">
-Download the app from <a href="https://github.com/alptugan/icns-creator/releases/tag/master">Releases</a>
+Download the app from <a href="https://github.com/alptugan/icns-creator/releases/latest">Releases</a>
 </p>
 
 <p align="center">
@@ -24,7 +24,7 @@ icns Creator is a macOS application that allows you to easily create icns files 
 
 To use icns Creator, follow these steps:
 
-1.  Download the latest release from the [Releases](https://github.com/username/repository/releases) page. If you want to edit the source code, clone the repository to your local machine & open it with XCode.  
+1.  Download the latest release from the [Releases](https://github.com/alptugan/icns-creator/) page. If you want to edit the source code, clone the repository to your local machine & open it with XCode.  
 2. Open the icns Creator application file (`icns-creator.app`).
 3. If prompted, allow the application to run on your system.
 4. You're ready to start creating icns files out of PNG, JPG, or any other image document!
