@@ -7,9 +7,10 @@
 
 import SwiftUI
 
-@available(macOS 13.0, *)
+
 @main
 struct icns_creatorApp: App {
+    
     var body: some Scene {
         
         WindowGroup {
@@ -18,10 +19,22 @@ struct icns_creatorApp: App {
             
             ContentView()
                 .frame(minWidth: w,maxWidth: w,minHeight: h,maxHeight: h)
-                .fixedSize()
+                .fixedSize(horizontal: false, vertical: true)
+                 
         }
         //.defaultSize(CGSize(width: 600, height: 400))
         //.defaultPosition(.center)
-        .windowResizability(.contentSize)
+        .windowResizabilityContentSize()
+    
+    }
+}
+
+extension Scene {
+    func windowResizabilityContentSize() -> some Scene {
+        if #available(macOS 13.0, *) {
+            return windowResizability(.contentSize)
+        } else {
+            return self
+        }
     }
 }

@@ -245,6 +245,5 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
             //.preferredColorScheme(.dark)
             .background(Color.black)
-
     }
 }
