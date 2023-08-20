@@ -1,6 +1,6 @@
 # icns Creator
 <p align="center">
-Download the app from <a href="https://github.com/alptugan/icns-creator/releases/latest">Releases</a>
+Download the app from <a href="https://github.com/alptugan/icns-creator/releases/latest">Releases</a><br>(Requires Mac OS 11.0+)
 </p>
 
 <p align="center">
@@ -68,7 +68,7 @@ _________________________________________________
 
 ## To do 
 - [x] App release
-- [x] Make it compatible with min Mac OS 10.13
+- [x] Make it compatible with min Mac OS 11.0
 - [ ] Set the icons using the app. 
 - [ ] Drag & drop design files onto the app window.
 - [ ] Drag & drop folders or apps to edit their icns props on the fly for better UX
