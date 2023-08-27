@@ -137,7 +137,7 @@ struct ContentView: View {
                                     }
                                     
                                     
-                                }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                                }.frame(maxWidth: .infinity, maxHeight: .infinity) // Image drawing on canvas
                             }
                         }
                     ) // Inside The content
@@ -173,7 +173,7 @@ struct ContentView: View {
         Spacer()
             .frame(height:150)
 
-        // After the image is display in the container show Convert Button
+        // After the image is display in the container show Convert <Button>
         VStack (alignment: .center) {
             if selectedImage != nil {
                 HStack {
@@ -222,7 +222,7 @@ struct ContentView: View {
                         }
                     }
                     .disabled(allTogglesOff)
-                }
+                } // Button
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

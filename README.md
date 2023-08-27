@@ -1,10 +1,16 @@
 # icns Creator
 <p align="center">
-Download the app from <a href="https://github.com/alptugan/icns-creator/releases/latest">Releases</a><br>(Requires Mac OS 11.0+)
+Download the app from <a href="https://github.com/alptugan/icns-creator/releases/latest">Releases</a> <span style="padding-left:5px;position:absolute"><img src="icns%20creator/icns_icon.png" width="8%" align="left"></span>
+<br>
+(Requires Mac OS 11.0+)
 </p>
 
 <p align="center">
-<img src="icns%20creator/icns_icon.png" width="20%">
+<img src="assets/version2.png" width="462">
+</p>
+
+<p align="center">
+
 </p>
 
 ## DEMO & Instructions
