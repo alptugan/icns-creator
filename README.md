@@ -1,5 +1,5 @@
 # icns Creator
-<p align="left">
+<p align="center">
 <span style="padding-left:0px;position:absolute"><img src="icns%20creator/icns_icon.png" width="8%" align="left"></span>
 Download the app from <a href="https://github.com/alptugan/icns-creator/releases/latest">Releases</a>
 <br>
