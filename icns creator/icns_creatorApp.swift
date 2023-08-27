@@ -10,12 +10,11 @@ import SwiftUI
 
 @main
 struct icns_creatorApp: App {
-    
     var body: some Scene {
         
         WindowGroup {
-            let w:CGFloat = 300
-            let h:CGFloat = 300
+            let w:CGFloat = 350
+            let h:CGFloat = 400
             
             ContentView()
                 .frame(minWidth: w,maxWidth: w,minHeight: h,maxHeight: h)
@@ -25,7 +24,8 @@ struct icns_creatorApp: App {
         //.defaultSize(CGSize(width: 600, height: 400))
         //.defaultPosition(.center)
         .windowResizabilityContentSize()
-    
+        .windowStyle(HiddenTitleBarWindowStyle())
+
     }
 }
 
