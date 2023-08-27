@@ -4,10 +4,10 @@
 
 </p>
 
-<p style="text-align: left;">
+<p style="text-align: left;" align="center">
   <table style="margin: 0 auto;">
     <tr>
-      <td><img src="icns%20creator/icns_icon.png" width="8%"></td>
+      <td width="10%"><img src="icns%20creator/icns_icon.png"></td>
       <td>Download the app from <a href="https://github.com/alptugan/icns-creator/releases/latest">Releases</a><br>(Requires Mac OS 11.0+)</td>
     </tr>
   </table>
