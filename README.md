@@ -4,7 +4,7 @@ Download the app from <a href="https://github.com/alptugan/icns-creator/releases
 </p>
 
 <p style="margin-top:-40px" align="center">
-<img src="assets/version2.png" width="462">
+<img src="assets/version1-3.png" width="462">
 </p>
 
 <p style="margin-top:-40px" align="center">
