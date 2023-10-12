@@ -14,7 +14,7 @@ struct icns_creatorApp: App {
         
         WindowGroup {
             let w:CGFloat = 350
-            let h:CGFloat = 400
+            let h:CGFloat = 420
             
             ContentView()
                 .frame(minWidth: w,maxWidth: w,minHeight: h,maxHeight: h)

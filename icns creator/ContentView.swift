@@ -12,6 +12,90 @@ class WindowSize: ObservableObject {
 }
 
 struct ContentView: View {
+    
+    
+    @State private var selectedTab = 0
+
+    
+    var body: some View {
+        // NAVIGATION MENU
+        VStack(spacing: 0) {
+                    Picker("", selection: $selectedTab) {
+                       // Text("Generate").tag(0)
+                        //Text("Swap").tag(1)
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .frame(height: 10)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .accentColor(.blue)
+                    //.background(Color.gray.opacity(0.15)) // Set background color
+
+                    
+                    switch selectedTab {
+                    case 0:
+                        GenerateView()
+                    case 1:
+                        SwapView()
+                    default:
+                        EmptyView()
+                    }
+                    
+                    Spacer()
+                }
+        
+        
+    }
+    
+    
+}
+
+extension NSOpenPanel {
+    static func openImage(completetion: @escaping (_ result: Result<NSImage, Error>, _ url: URL?) -> ()) {
+        let panel = NSOpenPanel()
+        panel.allowsMultipleSelection = false
+        panel.canChooseFiles = true
+        panel.canChooseDirectories = false
+        if #available(macOS 12.0, *) {
+            panel.allowedContentTypes = [.image]
+        }else{
+            panel.allowedFileTypes = ["jpg", "jpeg", "png", "gif"]
+        }
+        panel.begin { result in
+            if result == .OK, let url = panel.urls.first, let image = NSImage(contentsOf: url) {
+                completetion(.success(image), url)
+                //self.imagepa
+            }else{
+                completetion(.failure(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to get file location"])), nil)
+            }
+        }
+    }
+}
+
+struct TabBar: View {
+    @Binding var selectedTab: Int
+    
+    var body: some View {
+        HStack {
+            Button(action: {
+                selectedTab = 0
+            }) {
+                Text("Generate")
+                    .padding()
+            }
+            
+            Button(action: {
+                selectedTab = 1
+            }) {
+                Text("Swap")
+                    .padding()
+            }
+        }
+        .foregroundColor(.white)
+    }
+}
+
+struct GenerateView: View {
     @State private var isToggled_All = true
     @State private var isToggled_16 = true
     @State private var isToggled_32 = true
@@ -30,13 +114,13 @@ struct ContentView: View {
     @State private var selectedImage = NSImage(named: "image")
     @StateObject private var win = WindowSize()
     
+    
+    
     var allTogglesOff: Bool {
         return !isToggled_All && !isToggled_16 && !isToggled_32 && !isToggled_128 && !isToggled_256 && !isToggled_512
     }
     
     var body: some View {
-        
-        
         GeometryReader { geo in
             ZStack (alignment: .center) {
                 RoundedRectangle(cornerRadius: 10)
@@ -148,6 +232,8 @@ struct ContentView: View {
                             if let imageData = data, let path = NSString(data: imageData, encoding: 4),
                                let url = URL(string: path as String) {
                                 
+                                self.imagePath = url.path
+                                
                                 let image = NSImage(contentsOf: url)
                                 DispatchQueue.main.async {
                                     self.selectedImage = image
@@ -166,13 +252,13 @@ struct ContentView: View {
             .position(x: win.size.width*0.5, y:130)
             .onAppear {
                 win.size = geo.size
-                print("Initial Window Size: \(win.size.width) x \(win.size.height)")
+                //print("Initial Window Size: \(win.size.width) x \(win.size.height)")
             }
         }.environmentObject(win)
         
         Spacer()
-            .frame(height:150)
-
+            .frame(height:220)
+        
         // After the image is display in the container show Convert <Button>
         VStack (alignment: .center) {
             if selectedImage != nil {
@@ -308,27 +394,14 @@ struct ContentView: View {
     }
 }
 
-extension NSOpenPanel {
-    static func openImage(completetion: @escaping (_ result: Result<NSImage, Error>, _ url: URL?) -> ()) {
-        let panel = NSOpenPanel()
-        panel.allowsMultipleSelection = false
-        panel.canChooseFiles = true
-        panel.canChooseDirectories = false
-        if #available(macOS 12.0, *) {
-            panel.allowedContentTypes = [.image]
-        }else{
-            panel.allowedFileTypes = ["jpg", "jpeg", "png", "gif"]
-        }
-        panel.begin { result in
-            if result == .OK, let url = panel.urls.first, let image = NSImage(contentsOf: url) {
-                completetion(.success(image), url)
-                //self.imagepa
-            }else{
-                completetion(.failure(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to get file location"])), nil)
-            }
-        }
+struct SwapView: View {
+    var body: some View {
+        Text("Swap Content")
+            .font(.largeTitle)
+            .padding()
     }
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
