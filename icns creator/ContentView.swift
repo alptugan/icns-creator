@@ -11,45 +11,6 @@ class WindowSize: ObservableObject {
     @Published var size: CGSize = .zero
 }
 
-struct ContentView: View {
-    
-    
-    @State private var selectedTab = 0
-
-    
-    var body: some View {
-        // NAVIGATION MENU
-        VStack(spacing: 0) {
-                    Picker("", selection: $selectedTab) {
-                       // Text("Generate").tag(0)
-                        //Text("Swap").tag(1)
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                    .frame(height: 10)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .accentColor(.blue)
-                    //.background(Color.gray.opacity(0.15)) // Set background color
-
-                    
-                    switch selectedTab {
-                    case 0:
-                        GenerateView()
-                    case 1:
-                        SwapView()
-                    default:
-                        EmptyView()
-                    }
-                    
-                    Spacer()
-                }
-        
-        
-    }
-    
-    
-}
-
 extension NSOpenPanel {
     static func openImage(completetion: @escaping (_ result: Result<NSImage, Error>, _ url: URL?) -> ()) {
         let panel = NSOpenPanel()
@@ -72,36 +33,15 @@ extension NSOpenPanel {
     }
 }
 
-struct TabBar: View {
-    @Binding var selectedTab: Int
-    
-    var body: some View {
-        HStack {
-            Button(action: {
-                selectedTab = 0
-            }) {
-                Text("Generate")
-                    .padding()
-            }
-            
-            Button(action: {
-                selectedTab = 1
-            }) {
-                Text("Swap")
-                    .padding()
-            }
-        }
-        .foregroundColor(.white)
-    }
-}
-
-struct GenerateView: View {
+struct ContentView: View {
     @State private var isToggled_All = true
     @State private var isToggled_16 = true
     @State private var isToggled_32 = true
+    @State private var isToggled_64 = true
     @State private var isToggled_128 = true
     @State private var isToggled_256 = true
     @State private var isToggled_512 = true
+    @State private var isToggled_1024 = true
     @State private var imagePath: String?
     @State private var imgW: CGFloat = 150
     @State private var imgH: CGFloat = 150
@@ -117,7 +57,7 @@ struct GenerateView: View {
     
     
     var allTogglesOff: Bool {
-        return !isToggled_All && !isToggled_16 && !isToggled_32 && !isToggled_128 && !isToggled_256 && !isToggled_512
+        return !isToggled_All && !isToggled_16 && !isToggled_32 && !isToggled_64 && !isToggled_128 && !isToggled_256 && !isToggled_512 && !isToggled_1024
     }
     
     var body: some View {
@@ -217,7 +157,7 @@ struct GenerateView: View {
                                                         }
                                                     }
                                             }
-                                        }.position(x:localFrame.midX, y: localFrame.maxY + 25)
+                                        }.position(x:localFrame.midX, y: localFrame.maxY + 20)
                                     }
                                     
                                     
@@ -247,71 +187,85 @@ struct GenerateView: View {
                         self.selectFileFromSystem()
                     } // Show Browse window
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity,alignment: Alignment.top)
-            .background(Color.blue.opacity(0.008))
             .position(x: win.size.width*0.5, y:130)
             .onAppear {
                 win.size = geo.size
-                //print("Initial Window Size: \(win.size.width) x \(win.size.height)")
             }
-        }.environmentObject(win)
+        }.environmentObject(win).padding([.top], 20)
         
-        Spacer()
-            .frame(height:220)
+
         
         // After the image is display in the container show Convert <Button>
-        VStack (alignment: .center) {
-            if selectedImage != nil {
+        if selectedImage != nil {
+            VStack (alignment: .leading) {
                 HStack {
                     Toggle("All", isOn: $isToggled_All)
                         .onChange(of: isToggled_All) {
                             newValue in
-                            //if newValue {
                             isToggled_16 = newValue
                             isToggled_32 = newValue
+                            isToggled_64 = newValue
                             isToggled_128 = newValue
                             isToggled_256 = newValue
                             isToggled_512 = newValue
-                            //}
+                            isToggled_1024 = newValue
                         }
-                    Toggle("16x16", isOn: $isToggled_16)
-                    Toggle("32x32", isOn: $isToggled_32)
+                }
+                HStack {
+                    Toggle("16×16", isOn: $isToggled_16)
+                    Toggle("32×32", isOn: $isToggled_32)
+                    Toggle("64×64", isOn: $isToggled_64)
+                    Toggle("128×128", isOn: $isToggled_128)
                 } // Toggle buttons first row
                 HStack {
-                    Toggle("128x128", isOn: $isToggled_128)
-                    Toggle("256x256", isOn: $isToggled_256)
-                    Toggle("512x512", isOn: $isToggled_512)
+                    Toggle("256×256", isOn: $isToggled_256)
+                    Toggle("512×512", isOn: $isToggled_512)
+                    Toggle("102x1024", isOn: $isToggled_1024)
                 } // Toggle buttons second row
-                HStack {
-                    Button("Generate .icns") {
-                        //resizeAndSaveImage(imagePath: imagePath, width: imgW, height: imgW)
-                        //print("Toggle 1 value: \(isToggled_16)")
-                        if(isToggled_16 == true) {
-                            //resizeAndSaveImage(imagePath: imagePath, width: 16, height: 16)
-                            runShellCommand(res:16)
-                        }
-                        
-                        if(isToggled_32 == true) {
-                            runShellCommand(res:32)
-                        }
-                        
-                        if(isToggled_128 == true) {
-                            runShellCommand(res:128)
-                        }
-                        
-                        if(isToggled_256 == true) {
-                            runShellCommand(res:256)
-                        }
-                        
-                        if(isToggled_512 == true) {
-                            runShellCommand(res:512)
-                        }
-                    }
-                    .disabled(allTogglesOff)
-                } // Button
+                
             }
+            
+            VStack(alignment: .center) {
+                Button("Generate .icns") {
+                    //resizeAndSaveImage(imagePath: imagePath, width: imgW, height: imgW)
+                    //print("Toggle 1 value: \(isToggled_16)")
+                    if(isToggled_16 == true) {
+                        //resizeAndSaveImage(imagePath: imagePath, width: 16, height: 16)
+                        runShellCommand(res:16)
+                    }
+                    
+                    if(isToggled_32 == true) {
+                        runShellCommand(res:32)
+                    }
+                    
+                    if(isToggled_64 == true) {
+                        runShellCommand(res:64)
+                    }
+                    
+                    if(isToggled_128 == true) {
+                        runShellCommand(res:128)
+                    }
+                    
+                    if(isToggled_256 == true) {
+                        runShellCommand(res:256)
+                    }
+                    
+                    if(isToggled_512 == true) {
+                        runShellCommand(res:512)
+                    }
+                    
+                    if(isToggled_1024 == true) {
+                        runShellCommand(res:1024)
+                    }
+                    
+                    generateCombinedIcns()
+                }
+                .disabled(allTogglesOff)
+            }
+            .padding(.top, 10)
+            .padding(.bottom, 30)
+            
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
     func selectFileFromSystem() {
@@ -333,11 +287,16 @@ struct GenerateView: View {
         //let fname = escapedImagePath.
         //let subi = escapedImagePath?[&idd...]
         
-        let escapedImagePath2 = imagePath!.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
+        let escapedImageName = imagePath!.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
         
-        //let command = "sips -s format icns -z " + String(res) + " " + String(escapedImagePath) + " --out " + String(escapedImagePath2!) + "_" + String(res) + "x" + String(res) + ".icns"
-        //let command = "sips -s format icns -z \(Int(res)) \(Int(res)) \(String(describing: escapedImagePath ?? "")) --out  \(String(describing: escapedImagePath2 ?? ""))\("_")\(String(res))\("x")\(String(res)).icns"
-        let command = "sips -s format icns -z \(res) \(res) \(String(describing:escapedImagePath )) --out \(escapedImagePath2)_\(String(res))x\(String(res)).icns"
+        let escapedIconPath = escapedImageName + ".iconset"
+        
+        let mkdirProcess = Process()
+        mkdirProcess.launchPath = "/bin/bash"
+        mkdirProcess.arguments = ["-c", "mkdir " + escapedIconPath]
+        mkdirProcess.launch()
+        
+        let command = "sips -s format png -z \(res) \(res) \(String(describing:escapedImagePath )) --out \(escapedIconPath)/icon_\(String(res))x\(String(res)).png"
         
         process.launchPath = "/bin/bash"
         process.arguments = ["-c", command]
@@ -353,60 +312,41 @@ struct GenerateView: View {
         }
         
         process.waitUntilExit()
-        
-        // Second pass for setting preview image
-        let command2 = "sips -i \(String(describing:escapedImagePath2 ))_\(String(res))x\(String(res)).icns \(String(describing:escapedImagePath2 ))_\(String(res))x\(String(res)).icns"
-        
-        let process2 = Process()
-        process2.launchPath = "/bin/bash"
-        process2.arguments = ["-c", command2]
-        
-        let outputPipe2 = Pipe()
-        process2.standardOutput = outputPipe2
-        
-        process2.launch()
-        
-        let outputData2 = outputPipe2.fileHandleForReading.readDataToEndOfFile()
-        if let output2 = String(data: outputData2, encoding: .utf8) {
-            outputText2 = output2
-        }
-        
-        process2.waitUntilExit()
     }
     
-    func  showBrowseButton() -> some View {
-        return Button("Select Image") {
-            let panel = NSOpenPanel()
-            //panel.allowedContentTypes = [.image]
-            panel.allowedFileTypes = ["png", "jpg", "jpeg", "gif"]
-            panel.canChooseFiles = true
-            panel.canChooseDirectories = false
-            panel.allowsMultipleSelection = false
-            
-            panel.begin { response in
-                if response == .OK, let url = panel.urls.first {
-                    imagePath = url.path
-                    urlg = url
-                    selectedImage = NSImage(contentsOfFile: imagePath!)
-                }
-            }
+    func generateCombinedIcns() {
+        let process = Process()
+        
+        let escapedImageName = imagePath!.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
+        
+        let escapedIconPath = escapedImageName + ".iconset"
+        
+        let mkdirProcess = Process()
+        mkdirProcess.launchPath = "/bin/bash"
+        mkdirProcess.arguments = ["-c", "mkdir " + escapedIconPath]
+        mkdirProcess.launch()
+        
+        let command = "iconutil -c icns \(escapedIconPath)"
+        
+        process.launchPath = "/bin/bash"
+        process.arguments = ["-c", command]
+        
+        let outputPipe = Pipe()
+        process.standardOutput = outputPipe
+        
+        process.launch()
+        
+        let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+        if let output = String(data: outputData, encoding: .utf8) {
+            outputText = output
         }
+        
+        process.waitUntilExit()
     }
 }
-
-struct SwapView: View {
-    var body: some View {
-        Text("Swap Content")
-            .font(.largeTitle)
-            .padding()
-    }
-}
-
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-        //.preferredColorScheme(.dark)
-            .background(Color.black)
     }
 }
