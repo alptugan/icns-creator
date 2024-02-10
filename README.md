@@ -3,17 +3,24 @@
 Download the app from <a href="https://github.com/alptugan/icns-creator/releases/latest">Releases</a><br>(Requires Mac OS 11.0+)
 </p>
 
-<p style="margin-top:-40px" align="center">
-<img src="assets/version1-3.png" width="462">
+<p style="margin-top:-20px" align="center">
+<!--<img style="margin-left:-40px" src="assets/v2a.png" width="35%">
+<img style="margin-left:-50px" src="assets/v2b.png" width="35%">
+<img style="margin-left:-50px" src="assets/v2c.png" width="35%">-->
+<div style="display: flex; flex-wrap: wrap;">
+  <img src="assets/v2a.png" alt="Image 1" width="32%" style="margin-right: 10px;">
+  <img src="assets/v2b.png" alt="Image 2" width="32%" style="margin-right: 10px;">
+  <img src="assets/v2c.png" alt="Image 3" width="32%" style="margin-right: 10px;">
+</div>
 </p>
 
-<p style="margin-top:-40px" align="center">
+<p style="margin-top:-30px" align="center">
 <img src="icns%20creator/icns_icon.png" width="10%">
 </p>
 
-## DEMO & Instructions
+## DEMO & Instructions & QuickStart
 
-The UI is bit different with the v1.3. The following video is still appropriate. icns Creator is a macOS application that allows you to easily create icns files from any PNG or JPG image file. With this tool, you can quickly generate high-quality icns files to use as icons for your macOS applications.
+The UI is bit different with the v1. The following video is still appropriate. icns Creator is a macOS application that allows you to easily create icns files from any PNG or JPG image file. With this tool, you can quickly generate high-quality icns files to use as icons for your macOS applications or generate a single appropriate .iconset file.
 
 [<img src="icns%20creator/yt_cover_2.png" width="100%">](https://youtu.be/nwUu_3UDWjM "Now in Mac OS")
 
@@ -50,10 +57,10 @@ Contributions to icns Creator are welcome! If you would like to contribute to th
 1. Fork the repository.
 2. Create a new branch for your feature or bug fix.
 3. Make your changes and commit them with descriptive commit messages.
+4. Do not delete commented codes please 😉
 4. Push your changes to your forked repository.
 5. Open a pull request in the main repository, explaining your changes and their benefits.
 
-Please ensure that your contributions adhere to the [Code of Conduct](https://github.com/username/repository/blob/main/CODE_OF_CONDUCT.md).
 
 ## License
 
