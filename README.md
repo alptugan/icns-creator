@@ -42,13 +42,13 @@ To use icns Creator, follow these steps:
 
 ## Usage
 
-1. Prepare your image file in your preferred image editor, ensuring it has a minimum size of 512x512 pixels.
+1. Prepare your image file in your preferred image editor, ensuring it has a minimum size of 1024x1024 pixels.
 2. Save the image file as a PNG or JPG file in a 1:1 aspect ratio for the best results.
 3. Open the icns Creator application.
-4. Click the `Select Image` button and select the prepared image file.
-5. Click the `Generate .icns` button to start the conversion process.
-6. The icns files will be created in the same directory as the original image file.
-7. Use the generated icns file as an icon for your macOS applications.
+4. Click the `Browse` button or drag & drop the image.
+5. `.iconset` tab creates a single icon file, or `.icns` tab creates individual .icns files required for html pages.
+6. The files will be created in the same directory as the original image file.
+7. Use the generated icns file as an icon for your macOS applications. 
 
 ## Contribution
 
@@ -81,7 +81,7 @@ _________________________________________________
 - [x] App release
 - [x] Make it compatible with min Mac OS 11.0
 - [x] Drag & drop design files onto the app window.
-- [ ] Release major v2. 
-- [ ] Drag & drop folders or apps to edit their icns props on the fly for better UX
+- [x] Release major v2. 
+- [ ] Drag & drop folders or apps to edit their icns props on the fly for better UX. Set the icons using the app. 
+- [ ] Release major v3.
 - [ ] Distrubute through Homebrew
-- [ ] Set the icons using the app. 
