@@ -134,10 +134,13 @@ func runShellCommand2(res: Int, g: GlobalVariables) {
     
     let escapedImagePath2 = g.imagePath!.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
     
-    //let command = "sips -s format icns -z " + String(res) + " " + String(escapedImagePath) + " --out " + String(escapedImagePath2!) + "_" + String(res) + "x" + String(res) + ".icns"
-    //let command = "sips -s format icns -z \(Int(res)) \(Int(res)) \(String(describing: escapedImagePath ?? "")) --out  \(String(describing: escapedImagePath2 ?? ""))\("_")\(String(res))\("x")\(String(res)).icns"
-    let command = "sips -s format icns -z \(res) \(res) \(String(describing:escapedImagePath )) --out \(escapedImagePath2)_\(String(res))x\(String(res)).icns"
+    var command = ""
     
+    if res == 32 || res == 64 || res == 256 || res == 512 || res == 1024 {
+        command = "sips --setProperty dpiWidth 144 --setProperty dpiHeight 144 -s format icns -z \(Int(res)) \(Int(res)) \(String(describing:escapedImagePath )) --out \(escapedImagePath2)_\(String(res))x\(String(res)).icns"
+    } else {
+        command = "sips --setProperty dpiWidth 72 --setProperty dpiHeight 72 -s format icns -z \(Int(res)) \(Int(res)) \(String(describing:escapedImagePath )) --out \(escapedImagePath2)_\(String(res))x\(String(res)).icns"
+    }
     process.launchPath = "/bin/bash"
     process.arguments = ["-c", command]
     
@@ -157,7 +160,7 @@ func runShellCommand2(res: Int, g: GlobalVariables) {
     let command2 = "sips -i \(String(describing:escapedImagePath2 ))_\(String(res))x\(String(res)).icns \(String(describing:escapedImagePath2 ))_\(String(res))x\(String(res)).icns"
     
     let process2 = Process()
-    process2.launchPath = "/bin/bash"
+    process2.launchPath = "/bin/zsh"
     process2.arguments = ["-c", command2]
     
     let outputPipe2 = Pipe()
@@ -452,18 +455,22 @@ struct GenerateView_ICNS: View {
                             //if newValue {
                             g.isToggled_16 = newValue
                             g.isToggled_32 = newValue
+                            g.isToggled_64 = newValue
                             g.isToggled_128 = newValue
                             g.isToggled_256 = newValue
                             g.isToggled_512 = newValue
+                            g.isToggled_1024 = newValue
                             //}
                         }
                     Toggle("16x16", isOn: $g.isToggled_16)
                     Toggle("32x32", isOn: $g.isToggled_32)
+                    Toggle("64x64", isOn: $g.isToggled_64)
                 } // Toggle buttons first row
                 HStack {
                     Toggle("128x128", isOn: $g.isToggled_128)
                     Toggle("256x256", isOn: $g.isToggled_256)
                     Toggle("512x512", isOn: $g.isToggled_512)
+                    Toggle("1024x1024", isOn: $g.isToggled_1024)
                 } // Toggle buttons second row
                 HStack {
                     Button("Generate .icns") {
@@ -478,6 +485,10 @@ struct GenerateView_ICNS: View {
                             runShellCommand2(res:32, g:g)
                         }
                         
+                        if(g.isToggled_64 == true) {
+                            runShellCommand2(res:64, g:g)
+                        }
+                        
                         if(g.isToggled_128 == true) {
                             runShellCommand2(res:128, g:g)
                         }
@@ -488,6 +499,10 @@ struct GenerateView_ICNS: View {
                         
                         if(g.isToggled_512 == true) {
                             runShellCommand2(res:512, g:g)
+                        }
+                        
+                        if(g.isToggled_1024 == true) {
+                            runShellCommand2(res:1024, g:g)
                         }
                     }
                     .disabled(allTogglesOff)
