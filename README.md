@@ -1,16 +1,16 @@
 # icns Creator
+A simple app converts images to `.iconset` or `.icns` icon files for Mac OS.
+<!--p align="center">﹏﹏ ‿︵ ﹏﹏</p-->
+
+<p align="center">・・・・・・・・・・ ༄ ・・・・・・・・・・</p> 
+
 <p align="center">
 Download the app from <a href="https://github.com/alptugan/icns-creator/releases/latest">Releases</a><br>(Requires Mac OS 11.0+)
 </p>
 
-<p style="margin-top:-20px" align="center">
-<!--<img style="margin-left:-40px" src="assets/v2a.png" width="35%">
-<img style="margin-left:-50px" src="assets/v2b.png" width="35%">
-<img style="margin-left:-50px" src="assets/v2c.png" width="35%">-->
+<p style="margin-top:20px" align="center">
 <div style="display: flex; flex-wrap: wrap;">
-  <img src="assets/v2a.png" alt="Image 1" width="32%" style="margin-right: 10px;">
-  <img src="assets/v2b.png" alt="Image 2" width="32%" style="margin-right: 10px;">
-  <img src="assets/v2c.png" alt="Image 3" width="32%" style="margin-right: 10px;">
+  <img src="assets/v2-1_icns_creator_header.jpg" alt="Image 1" width="100%" style="margin-right: 0px;border-radius: 15px;">
 </div>
 </p>
 
@@ -78,10 +78,12 @@ If you have any questions, suggestions, or feedback, please feel free to use Iss
 _________________________________________________
 
 ## To do 
-- [x] App release
-- [x] Make it compatible with min Mac OS 11.0
-- [x] Drag & drop design files onto the app window.
-- [x] Release major v2. 
+- [x] ~~App release~~
+- [x] ~~Make it compatible with min Mac OS 11.0~~
+- [x] ~~Drag & drop design files onto the app window.~~
+- [x] ~~Release major v2.~~
 - [ ] Drag & drop folders or apps to edit their icns props on the fly for better UX. Set the icons using the app. 
 - [ ] Release major v3.
-- [ ] Distrubute through Homebrew
+- [ ] Distrubute through Homebrew.
+- [ ] Apple Codesign issues! (Optional) 
+- [ ] Distrubute image conversion process into different CPU threads. It is a possible fix to avoid locking main thread during the icns creation process.
