@@ -9,9 +9,7 @@ Download the app from <a href="https://github.com/alptugan/icns-creator/releases
 </p>
 
 <p style="margin-top:20px" align="center">
-<div style="display: flex; flex-wrap: wrap;">
-  <img src="assets/v2-1_icns_creator_header.jpg" alt="Image shows the three different screen shots of the main app window." width="100%" height="auto" style="border-radius:1em;">
-</div>
+  <a href=""><img src="assets/v2-1_icns_creator_header.jpg" alt="Image shows the three different screen shots of the main app window." width="100%" height="auto" style="border-radius:1em;"></a>
 </p>
 
 <p style="margin-top:-30px" align="center">
