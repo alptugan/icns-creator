@@ -1,5 +1,5 @@
 <h1 align="center">icns Creator</h1>
-<p align="center">A simple app converts images to `.iconset` or `.icns` icon files for Mac OS.</p>
+<p align="center">A native Mac OS app that converts images to `.iconset` or `.icns` icon files.</p>
 <!--p align="center">﹏﹏ ‿︵ ﹏﹏</p-->
 
 <p align="center">・・・・・・・・・・ ༄ ・・・・・・・・・・</p> 
