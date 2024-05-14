@@ -8,9 +8,7 @@
 Download the app from <a href="https://github.com/alptugan/icns-creator/releases/latest">Releases</a><br>(Requires Mac OS 11.0+)
 </p>
 
-<p style="margin-top:20px" align="center">
-  <a href=""><img src="assets/v2-1_icns_creator_header.jpg" alt="Image shows the three different screen shots of the main app window." width="100%" height="auto" style="border-radius:1em;"></a>
-</p>
+<img src="assets/v2-1_icns_creator_header.jpg" alt="Image shows the three different screen shots of the main app window." width="100%" height="auto" style="border-radius:15px;">
 
 <p style="margin-top:-30px" align="center">
 <img src="icns%20creator/icns_icon.png" width="10%">
