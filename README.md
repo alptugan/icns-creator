@@ -78,8 +78,9 @@ _________________________________________________
 - [x] ~~Make it compatible with min Mac OS 11.0~~
 - [x] ~~Drag & drop design files onto the app window.~~
 - [x] ~~Release major v2.~~
+- [ ] Add feature to export icons with rounded-corners.
 - [ ] Drag & drop folders or apps to edit their icns props on the fly for better UX. Set the icons using the app. 
 - [ ] Release major v3.
+- [ ] Distrubute image conversion process into different CPU threads. It is a possible fix to avoid locking main thread during the icns creation process.
 - [ ] Distrubute through Homebrew.
 - [ ] Apple Codesign issues! (Optional) 
-- [ ] Distrubute image conversion process into different CPU threads. It is a possible fix to avoid locking main thread during the icns creation process.
