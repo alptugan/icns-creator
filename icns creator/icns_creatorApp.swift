@@ -3,12 +3,10 @@
 //  icns creator
 //
 //  Created by alp tugan on 10.08.2023.
+//  Update: v2.2 on 04.09.2024
 //
 
 import SwiftUI
-
-
-
 
 
 class WindowSize: ObservableObject {

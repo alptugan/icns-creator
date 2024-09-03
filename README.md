@@ -78,6 +78,7 @@ _________________________________________________
 - [x] ~~Make it compatible with min Mac OS 11.0~~
 - [x] ~~Drag & drop design files onto the app window.~~
 - [x] ~~Release major v2.~~
+- [ ] Ask for destination to save files...
 - [ ] Add feature to export icons with rounded-corners.
 - [ ] Drag & drop folders or apps to edit their icns props on the fly for better UX. Set the icons using the app. 
 - [ ] Release major v3.
