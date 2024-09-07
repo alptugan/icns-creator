@@ -80,6 +80,7 @@ _________________________________________________
 - [x] ~~Release major v2.~~
 - [ ] Ask for destination to save files...
 - [ ] Add feature to export icons with rounded-corners.
+- [ ] Add feature to export export icons with padding depending on Apple design standards.
 - [ ] Drag & drop folders or apps to edit their icns props on the fly for better UX. Set the icons using the app. 
 - [ ] Release major v3.
 - [ ] Distrubute image conversion process into different CPU threads. It is a possible fix to avoid locking main thread during the icns creation process.
