@@ -41,180 +41,6 @@ func selectFileFromSystem(g: GlobalVariables) {
     }
 }
 
-// RUN FOR SINGLE ICONSET
-/*func runShellCommand(g: GlobalVariables) {
-    guard let imagePath = g.imagePath else {
-        print("imagePath is nil.")
-        return
-    }
-    
-    let escapedImagePath = imagePath.replacingOccurrences(of: " ", with: "\\ ")
-    let escapedImageName = imagePath.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
-    
-    // Create ".iconset" file
-    let escapedIconPath = escapedImageName + ".iconset"
-    let fileManager = FileManager.default
-    let directoryPath = escapedIconPath
-    var isDirectory: ObjCBool = false
-    
-    if fileManager.fileExists(atPath: directoryPath, isDirectory: &isDirectory) {
-        if isDirectory.boolValue {
-            print("The directory exists.")
-        } else {
-            print("A file exists at the specified path, not a directory.")
-        }
-    } else {
-        print("The directory does not exist.")
-        let mkdirProcess = Process()
-        mkdirProcess.launchPath = "/bin/bash"
-        mkdirProcess.arguments = ["-c", "mkdir " + escapedIconPath]
-        mkdirProcess.launch()
-    }
-    
-    let sizes: [Int] = [16, 32, 128, 256, 512]
-    
-    for size in sizes {
-        let process = Process()
-        process.launchPath = "/bin/bash"
-        
-        let command = "sips -s format png -z \(size) \(size) \(String(describing:escapedImagePath)) --out \(escapedIconPath)/icon_\(size)x\(size).png"
-        process.arguments = ["-c", command]
-        
-        let outputPipe = Pipe()
-        let errorPipe = Pipe()
-        process.standardOutput = outputPipe
-        process.standardError = errorPipe
-        
-        process.launch()
-        process.waitUntilExit()
-        
-        let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-        if let output = String(data: outputData, encoding: .utf8) {
-            g.outputText = output
-        }
-    }
-    
-    // @2x files
-    let sizes2: [Int] = [16, 32, 128, 256, 512]
-    for size in sizes2 {
-        let process = Process()
-        process.launchPath = "/bin/bash"
-        
-        let nSz = size * 2
-        
-        let command = "sips -s format png -z \(nSz) \(nSz) \(String(describing:escapedImagePath)) --out \(escapedIconPath)/icon_\(size)x\(size)@2x.png"
-        process.arguments = ["-c", command]
-        
-        let outputPipe = Pipe()
-        let errorPipe = Pipe()
-        process.standardOutput = outputPipe
-        process.standardError = errorPipe
-        
-        process.launch()
-        process.waitUntilExit()
-        
-        let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-        if let output = String(data: outputData, encoding: .utf8) {
-            g.outputText = output
-        }
-    }
-    
-}
-*/
-
-/*
-func runShellCommand(g: GlobalVariables) {
-    guard let imagePath = g.imagePath else {
-        print("imagePath is nil.")
-        return
-    }
-    
-    let escapedImagePath = imagePath.replacingOccurrences(of: " ", with: "\\ ")
-    let escapedImageName = imagePath.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
-    
-    // Create ".iconset" file
-    let escapedIconPath = escapedImageName + ".iconset"
-    let fileManager = FileManager.default
-    let directoryPath = escapedIconPath
-    var isDirectory: ObjCBool = false
-    
-    
-    
-    if !fileManager.fileExists(atPath: directoryPath, isDirectory: &isDirectory) {
-        print("The directory does not exist. Creating...")
-        try? fileManager.createDirectory(atPath: directoryPath, withIntermediateDirectories: true, attributes: nil)
-    } else if !isDirectory.boolValue {
-        print("A file exists at the specified path, not a directory.")
-        return
-    }
-    
-
-    let sizes: [Int] = [16, 32, 128, 256, 512]
-    
-
-    for size in sizes {
-        if let roundedImage = createRoundedImage(from: escapedImagePath, size: size) {
-            if let tiffData = roundedImage.tiffRepresentation,
-               let bitmapRep = NSBitmapImageRep(data: tiffData),
-               let pngData = bitmapRep.representation(using: .png, properties: [:]) {
-                let outputPath = "\(escapedIconPath)/icon_\(size)x\(size).png"
-                try? pngData.write(to: URL(fileURLWithPath: outputPath))
-                let process = Process()
-                process.launchPath = "/bin/bash"
-                
-                let command = "sips -s format png -z \(size) \(size) \(String(describing:outputPath)) --out \(escapedIconPath)/icon_\(size)x\(size).png"
-                process.arguments = ["-c", command]
-                
-                let outputPipe = Pipe()
-                let errorPipe = Pipe()
-                process.standardOutput = outputPipe
-                process.standardError = errorPipe
-                
-                process.launch()
-                process.waitUntilExit()
-                
-                let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-                if let output = String(data: outputData, encoding: .utf8) {
-                    g.outputText = output
-                }
-            }
-        }
-    }
-    
-    // @2x files
-    for size in sizes {
-        let nSz = size * 2
-        
-        if let roundedImage = createRoundedImage(from: escapedImagePath, size: nSz) {
-            if let tiffData = roundedImage.tiffRepresentation,
-               let bitmapRep = NSBitmapImageRep(data: tiffData),
-               let pngData = bitmapRep.representation(using: .png, properties: [:]) {
-                let outputPath = "\(escapedIconPath)/icon_\(size)x\(size)@2x.png"
-                try? pngData.write(to: URL(fileURLWithPath: outputPath))
-                let process = Process()
-                process.launchPath = "/bin/bash"
-                                
-                let command = "sips -s format png -z \(nSz) \(nSz) \(String(describing:outputPath)) --out \(escapedIconPath)/icon_\(size)x\(size)@2x.png"
-                process.arguments = ["-c", command]
-                
-                let outputPipe = Pipe()
-                let errorPipe = Pipe()
-                process.standardOutput = outputPipe
-                process.standardError = errorPipe
-                
-                process.launch()
-                process.waitUntilExit()
-                
-                let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-                if let output = String(data: outputData, encoding: .utf8) {
-                    g.outputText = output
-                }
-            }
-        }
-    }
-}
- */
-
 //-------------------------------------------------------------------------------------------------
 // PART 1: GENERATE ICNS
 //-------------------------------------------------------------------------------------------------
@@ -249,7 +75,7 @@ func runShellCommand(g: GlobalVariables) {
 }
 
 func processImage(size: Int, scale: Int, escapedImagePath: String, escapedIconPath: String, g: GlobalVariables) {
-    guard let roundedImage = createRoundedImage(from: escapedImagePath, size: size) else { return }
+    guard let roundedImage = createRoundedImage(from: escapedImagePath, size: size, _isRoundCornersEnabled: g.enableRoundedCorners) else { return }
     
     guard let tiffData = roundedImage.tiffRepresentation,
           let bitmapRep = NSBitmapImageRep(data: tiffData),
@@ -293,31 +119,82 @@ func runSipsCommand(size: Int, outputPath: String, g: GlobalVariables) throws {
 //-------------------------------------------------------------------------------------------------
 // CREATE ROUNDED CORNERS
 //-------------------------------------------------------------------------------------------------
-func createRoundedImage(from path: String, size: Int) -> NSImage? {
+func createRoundedImage(from path: String, size: Int, _isRoundCornersEnabled: Bool) -> NSImage? {
     guard let image = NSImage(contentsOfFile: path) else { return nil }
 
-    // Ensure newSize is valid
+    // Ensure size is valid
     guard size > 0 else {
-        print("Invalid newSize: \(size). Returning nil.")
+        print("Invalid size: \(size). Returning nil.")
         return nil
     }
 
-    
-    let roundedRect = NSRect(x: 0, y: 0, width: size, height: size)
-    // Calculate radius
-    let radiusVal = 0.225 * Double(size)
-    
-    let bezierPath = NSBezierPath(roundedRect: roundedRect, xRadius: radiusVal, yRadius: radiusVal)
+    // Scale down sizes according to the specified rules
+    let scaledSize: Int
+    switch size {
+    case 1024: scaledSize = 824
+    case 512:  scaledSize = 412
+    case 256:  scaledSize = 206
+    case 128:  scaledSize = 103
+    case 64:   scaledSize = 52
+    case 32:   scaledSize = 28
+    case 16:   scaledSize = 14
+    default:   scaledSize = size // Fallback to original size if not specified
+    }
 
-    let imageSize = NSSize(width: size, height: size)
-    let roundedImage = NSImage(size: imageSize)
+    // Create a new NSImage with the original size
+    let finalImage = NSImage(size: NSSize(width: size, height: size))
 
-    roundedImage.lockFocus()
+    // Calculate radius for rounded corners
+    
+    // Calculate radius for rounded corners
+    var radiusVal:Double = 0
+    if (_isRoundCornersEnabled) {
+        radiusVal = 0.225 * Double(scaledSize)
+    }
+    let bezierPath = NSBezierPath(roundedRect: NSRect(x: 0, y: 0, width: size, height: size), xRadius: radiusVal, yRadius: radiusVal)
+
+    finalImage.lockFocus()
+    
+    // Clip to the larger rounded rectangle
     bezierPath.addClip()
-    image.draw(in: NSRect(x: 0, y: 0, width: size, height: size)) // Use newSize here
-    roundedImage.unlockFocus()
 
-    return roundedImage
+    // Calculate the origin to center the scaled-down image
+    let xOffset = (size - scaledSize) / 2
+    let yOffset = (size - scaledSize) / 2
+
+    // Create a new NSImage for the scaled image
+    let scaledImage = NSImage(size: NSSize(width: scaledSize, height: scaledSize))
+    scaledImage.lockFocus()
+
+    // Create a path for the scaled image with rounded corners
+    let scaledBezierPath = NSBezierPath(roundedRect: NSRect(x: 0, y: 0, width: scaledSize, height: scaledSize), xRadius: radiusVal, yRadius: radiusVal)
+    
+    // Clip to the rounded rectangle for the scaled image
+    scaledBezierPath.addClip()
+
+    // Draw the scaled image centered
+    image.draw(in: NSRect(x: 0, y: 0, width: scaledSize, height: scaledSize), from: NSRect.zero, operation: .sourceOver, fraction: 1.0)
+
+    // Unlock the scaled image focus
+    scaledImage.unlockFocus()
+
+    // Prepare to draw the shadow for the scaled image
+    let shadow = NSShadow()
+    let shadowRadius = floor(Double(scaledSize) * 0.034)
+    shadow.shadowOffset = NSSize(width: 0, height: -1)
+    shadow.shadowBlurRadius = CGFloat(shadowRadius)  // Set shadow blur radius
+    shadow.shadowColor = NSColor.black.withAlphaComponent(0.3)  // Set shadow color
+
+    // Draw the shadow and the scaled image
+    finalImage.lockFocus()
+    shadow.set()
+    
+    // Draw the scaled image in the final image
+    scaledImage.draw(in: NSRect(x: xOffset, y: yOffset, width: scaledSize, height: scaledSize), from: NSRect.zero, operation: .sourceOver, fraction: 1.0)
+
+    finalImage.unlockFocus()
+
+    return finalImage
 }
 
 extension NSBitmapImageRep {
@@ -390,7 +267,6 @@ func generateCombinedIcns(g: GlobalVariables) {
     let escapedImageName = g.imagePath!.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
     
     let escapedIconPath = escapedImageName + ".iconset"
-    
     
     
     let fileManager = FileManager.default
@@ -481,7 +357,7 @@ struct ContentView: View {
 // COMMON ELEMENTS
 struct CommonView: View {
     @EnvironmentObject var g: GlobalVariables // Access the global variables
-    
+
     var body: some View {
         GeometryReader { geo in
             ZStack (alignment: .center){
@@ -571,6 +447,26 @@ struct CommonView: View {
                                                     }
                                             }
                                         }.position(x:localFrame.midX, y: localFrame.maxY + 20)
+                                        
+                                        // Toggle for enabling ROUNDED corners
+                                        HStack {
+                                            Text("Enable Rounded Corners")
+                                                .font(.subheadline)
+                                                .foregroundColor(.gray)
+                                            Spacer()
+                                            
+                                            Toggle(isOn: $g.enableRoundedCorners) {
+                                                //Label("Flag", systemImage: "flag.fill")
+                                            }
+                                            .toggleStyle(SwitchToggleStyle())
+                                            .labelsHidden()
+                                            .fixedSize()
+                                            .scaleEffect(0.8)
+                                            
+
+                                        }
+                                        .padding(.top, 10)
+                                        .position(x: localFrame.midX, y: localFrame.maxY + 50) // Position the toggle
                                     }
                                     
                                     
@@ -613,7 +509,8 @@ struct CommonView: View {
 // ONLY CREATE ICONSET FOLDER
 struct GenerateView_ICONSET: View {
     @EnvironmentObject var g: GlobalVariables // Access the global variables
-    
+    @State private var isProces: Bool = false // Boolean variable available across functions
+
     var body: some View {
         
         

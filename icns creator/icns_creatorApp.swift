@@ -37,6 +37,9 @@ class GlobalVariables: ObservableObject {
     @Published var selectedImage = NSImage(named: "image")
     @Published var win = WindowSize()
     
+    @Published var enableRoundedCorners: Bool = false // Toggle state
+
+    
     var winWidth: CGFloat {
         return winSize.width - winSize.width * 0.85
     }
