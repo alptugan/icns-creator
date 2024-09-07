@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Foundation
-
+import Cocoa
 
 
 extension NSOpenPanel {
@@ -42,7 +42,7 @@ func selectFileFromSystem(g: GlobalVariables) {
 }
 
 // RUN FOR SINGLE ICONSET
-func runShellCommand(g: GlobalVariables) {
+/*func runShellCommand(g: GlobalVariables) {
     guard let imagePath = g.imagePath else {
         print("imagePath is nil.")
         return
@@ -120,7 +120,122 @@ func runShellCommand(g: GlobalVariables) {
     }
     
 }
+*/
+func runShellCommand(g: GlobalVariables) {
+    guard let imagePath = g.imagePath else {
+        print("imagePath is nil.")
+        return
+    }
+    
+    let escapedImagePath = imagePath.replacingOccurrences(of: " ", with: "\\ ")
+    let escapedImageName = imagePath.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
+    
+    // Create ".iconset" file
+    let escapedIconPath = escapedImageName + ".iconset"
+    let fileManager = FileManager.default
+    let directoryPath = escapedIconPath
+    var isDirectory: ObjCBool = false
+    
+    if !fileManager.fileExists(atPath: directoryPath, isDirectory: &isDirectory) {
+        print("The directory does not exist. Creating...")
+        try? fileManager.createDirectory(atPath: directoryPath, withIntermediateDirectories: true, attributes: nil)
+    } else if !isDirectory.boolValue {
+        print("A file exists at the specified path, not a directory.")
+        return
+    }
 
+    let sizes: [Int] = [16, 32, 128, 256, 512]
+    
+
+    for size in sizes {
+        var newSize = 0
+        // Calculate final size according to Apple standards
+        switch size {
+        case 512:
+            newSize = 412
+        case 256:
+            newSize = 206
+        case 128:
+            newSize = 103
+        case 32:
+            newSize = 28
+        case 16:
+            newSize = 14
+        default:
+            newSize = size
+        }
+        
+        if let roundedImage = createRoundedImage(from: escapedImagePath, size: newSize) {
+            if let tiffData = roundedImage.tiffRepresentation,
+               let bitmapRep = NSBitmapImageRep(data: tiffData),
+               let pngData = bitmapRep.representation(using: .png, properties: [:]) {
+                let outputPath = "\(escapedIconPath)/icon_\(size)x\(size).png"
+                try? pngData.write(to: URL(fileURLWithPath: outputPath))
+            }
+        }
+    }
+    
+    // @2x files
+    for size in sizes {
+        let nSz = size * 2
+        var newSize = 0
+        // Calculate final size according to Apple standards
+        switch nSz {
+        case 1024:
+            newSize = 824
+        case 256:
+            newSize = 206
+        case 64:
+            newSize = 52
+        case 32:
+            newSize = 28
+        default:
+            newSize = size
+        }
+        if let roundedImage = createRoundedImage(from: escapedImagePath, size: newSize) {
+            if let tiffData = roundedImage.tiffRepresentation,
+               let bitmapRep = NSBitmapImageRep(data: tiffData),
+               let pngData = bitmapRep.representation(using: .png, properties: [:]) {
+                let outputPath = "\(escapedIconPath)/icon_\(size)x\(size)@2x.png"
+                try? pngData.write(to: URL(fileURLWithPath: outputPath))
+            }
+        }
+    }
+}
+func createRoundedImage(from path: String, size: Int) -> NSImage? {
+    guard let image = NSImage(contentsOfFile: path) else { return nil }
+    
+    
+    
+    // Ensure newSize is valid
+    guard size > 0 else {
+        print("Invalid newSize: \(size). Returning nil.")
+        return nil
+    }
+    
+    
+    let roundedRect = NSRect(x: 0, y: 0, width: size, height: size)
+    // Calculate radius
+    let radiusVal = 0.225 * Double(size)
+    
+    let bezierPath = NSBezierPath(roundedRect: roundedRect, xRadius: radiusVal, yRadius: radiusVal)
+
+    let imageSize = NSSize(width: size, height: size)
+    let roundedImage = NSImage(size: imageSize)
+
+    roundedImage.lockFocus()
+    bezierPath.addClip()
+    image.draw(in: NSRect(x: 0, y: 0, width: size, height: size)) // Use newSize here
+    roundedImage.unlockFocus()
+
+    return roundedImage
+}
+
+extension NSBitmapImageRep {
+    func pngRepresentation() -> Data? {
+        return self.representation(using: .png, properties: [:])
+    }
+}
 // RUN FOR SEPERATE .icns files
 func runShellCommand2(res: Int, g: GlobalVariables) {
     
@@ -285,11 +400,11 @@ struct CommonView: View {
                         Group {
                             GeometryReader { geometry in
                                 // dash line around the drop location
-                                RoundedRectangle(cornerRadius: 10)
+                                RoundedRectangle(cornerRadius: 27.1)
                                     .stroke(g.dragOver ? Color.blue : Color.gray.opacity(0.5), style: StrokeStyle(lineWidth: 3, dash:[4]))
                                     .frame(width: geometry.size.width * 0.85, height: geometry.size.height * 0.85)
                                     .background(g.dragOver ? Color.blue.opacity(0.1) : Color.white) // If nothing dragged onto section
-                                    .cornerRadius(10)
+                                    .cornerRadius(27.1)
                                     .position(x: geometry.frame(in: .local).midX, y:geometry.frame(in: .local).midY)
                                 
                                 VStack {
@@ -300,21 +415,21 @@ struct CommonView: View {
                                             let localFrame = geo.frame(in: .local)
                                             VStack {
                                                 ZStack {
-                                                    RoundedRectangle(cornerRadius: 14)
+                                                    RoundedRectangle(cornerRadius: 27.1)
                                                     //.stroke(Color.blue, style: StrokeStyle(lineWidth: 4))
                                                         .frame(width: g.imgW , height: g.imgH)
                                                         .shadow(radius: 10)
-                                                    //.background(Color.blue) // If nothing dragged onto section
-                                                    //.cornerRadius(13)
-                                                    //.position(x: selectedImage.frame(in: .local).midX, y:selectedImage.frame(in: .local).midY)
                                                     
                                                     Image(nsImage: g.selectedImage!)
                                                         .resizable()
-                                                    //.aspectRatio(contentMode: .fit)
-                                                        .scaledToFit()
+                                                        //.scaledToFit()
                                                         .frame(width: g.imgW, height: g.imgH)
-                                                        .cornerRadius(15)
-                                                }.position(x:localFrame.midX, y: localFrame.maxY)
+                                                        .cornerRadius(27.1)
+                                                }.position(x:localFrame.midX, y: localFrame.maxY).onAppear{
+                                                    // Print the value of g.imgW to the console
+                                                    // print("g.imgW: \(g.imgW)") 150 px
+                                                }
+                                                
                                             }
                                         }
                                     }
@@ -329,14 +444,6 @@ struct CommonView: View {
                                                     .scaleEffect(g.dragOver ? 1 : 0)
                                                     .position(x:g.dragOver ? localFrame.midX : localFrame.midX, y: localFrame.maxY - 20)
                                                 
-                                                /*Image("imgcolor")
-                                                 .resizable()
-                                                 .position(x:dragOver ? localFrame.minX : localFrame.midX, y: localFrame.midY)
-                                                 
-                                                 Image("imgcolor")
-                                                 .resizable()
-                                                 .position(x:dragOver ? localFrame.maxX : localFrame.midX, y: localFrame.midY)*/
-                                                
                                                 Image("drag")
                                                     .resizable()
                                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -350,7 +457,6 @@ struct CommonView: View {
                                     }
                                     
                                     // Display the text always
-                                    //Spacer()
                                     GeometryReader { geo in
                                         let localFrame = geo.frame(in: .local)
                                         VStack {
