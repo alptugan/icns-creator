@@ -121,6 +121,8 @@ func selectFileFromSystem(g: GlobalVariables) {
     
 }
 */
+
+/*
 func runShellCommand(g: GlobalVariables) {
     guard let imagePath = g.imagePath else {
         print("imagePath is nil.")
@@ -136,6 +138,8 @@ func runShellCommand(g: GlobalVariables) {
     let directoryPath = escapedIconPath
     var isDirectory: ObjCBool = false
     
+    
+    
     if !fileManager.fileExists(atPath: directoryPath, isDirectory: &isDirectory) {
         print("The directory does not exist. Creating...")
         try? fileManager.createDirectory(atPath: directoryPath, withIntermediateDirectories: true, attributes: nil)
@@ -143,34 +147,36 @@ func runShellCommand(g: GlobalVariables) {
         print("A file exists at the specified path, not a directory.")
         return
     }
+    
 
     let sizes: [Int] = [16, 32, 128, 256, 512]
     
 
     for size in sizes {
-        var newSize = 0
-        // Calculate final size according to Apple standards
-        switch size {
-        case 512:
-            newSize = 412
-        case 256:
-            newSize = 206
-        case 128:
-            newSize = 103
-        case 32:
-            newSize = 28
-        case 16:
-            newSize = 14
-        default:
-            newSize = size
-        }
-        
-        if let roundedImage = createRoundedImage(from: escapedImagePath, size: newSize) {
+        if let roundedImage = createRoundedImage(from: escapedImagePath, size: size) {
             if let tiffData = roundedImage.tiffRepresentation,
                let bitmapRep = NSBitmapImageRep(data: tiffData),
                let pngData = bitmapRep.representation(using: .png, properties: [:]) {
                 let outputPath = "\(escapedIconPath)/icon_\(size)x\(size).png"
                 try? pngData.write(to: URL(fileURLWithPath: outputPath))
+                let process = Process()
+                process.launchPath = "/bin/bash"
+                
+                let command = "sips -s format png -z \(size) \(size) \(String(describing:outputPath)) --out \(escapedIconPath)/icon_\(size)x\(size).png"
+                process.arguments = ["-c", command]
+                
+                let outputPipe = Pipe()
+                let errorPipe = Pipe()
+                process.standardOutput = outputPipe
+                process.standardError = errorPipe
+                
+                process.launch()
+                process.waitUntilExit()
+                
+                let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+                if let output = String(data: outputData, encoding: .utf8) {
+                    g.outputText = output
+                }
             }
         }
     }
@@ -178,41 +184,124 @@ func runShellCommand(g: GlobalVariables) {
     // @2x files
     for size in sizes {
         let nSz = size * 2
-        var newSize = 0
-        // Calculate final size according to Apple standards
-        switch nSz {
-        case 1024:
-            newSize = 824
-        case 256:
-            newSize = 206
-        case 64:
-            newSize = 52
-        case 32:
-            newSize = 28
-        default:
-            newSize = size
-        }
-        if let roundedImage = createRoundedImage(from: escapedImagePath, size: newSize) {
+        
+        if let roundedImage = createRoundedImage(from: escapedImagePath, size: nSz) {
             if let tiffData = roundedImage.tiffRepresentation,
                let bitmapRep = NSBitmapImageRep(data: tiffData),
                let pngData = bitmapRep.representation(using: .png, properties: [:]) {
                 let outputPath = "\(escapedIconPath)/icon_\(size)x\(size)@2x.png"
                 try? pngData.write(to: URL(fileURLWithPath: outputPath))
+                let process = Process()
+                process.launchPath = "/bin/bash"
+                                
+                let command = "sips -s format png -z \(nSz) \(nSz) \(String(describing:outputPath)) --out \(escapedIconPath)/icon_\(size)x\(size)@2x.png"
+                process.arguments = ["-c", command]
+                
+                let outputPipe = Pipe()
+                let errorPipe = Pipe()
+                process.standardOutput = outputPipe
+                process.standardError = errorPipe
+                
+                process.launch()
+                process.waitUntilExit()
+                
+                let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+                if let output = String(data: outputData, encoding: .utf8) {
+                    g.outputText = output
+                }
             }
         }
     }
 }
+ */
+
+//-------------------------------------------------------------------------------------------------
+// PART 1: GENERATE ICNS
+//-------------------------------------------------------------------------------------------------
+func runShellCommand(g: GlobalVariables) {
+    guard let imagePath = g.imagePath else {
+        print("imagePath is nil.")
+        return
+    }
+    
+    let escapedImagePath = imagePath.replacingOccurrences(of: " ", with: "\\ ")
+    let escapedImageName = imagePath.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
+    
+    let escapedIconPath = "\(escapedImageName).iconset"
+    let fileManager = FileManager.default
+    
+    // Check and create directory
+    var isDirectory: ObjCBool = false
+    if !fileManager.fileExists(atPath: escapedIconPath, isDirectory: &isDirectory) {
+        print("The directory does not exist. Creating...")
+        try? fileManager.createDirectory(atPath: escapedIconPath, withIntermediateDirectories: true, attributes: nil)
+    } else if !isDirectory.boolValue {
+        print("A file exists at the specified path, not a directory.")
+        return
+    }
+    
+    let sizes: [Int] = [16, 32, 128, 256, 512]
+    
+    for size in sizes {
+        processImage(size: size, scale: 1, escapedImagePath: escapedImagePath, escapedIconPath: escapedIconPath, g: g)
+        processImage(size: size * 2, scale: 2, escapedImagePath: escapedImagePath, escapedIconPath: escapedIconPath, g: g)
+    }
+}
+
+func processImage(size: Int, scale: Int, escapedImagePath: String, escapedIconPath: String, g: GlobalVariables) {
+    guard let roundedImage = createRoundedImage(from: escapedImagePath, size: size) else { return }
+    
+    guard let tiffData = roundedImage.tiffRepresentation,
+          let bitmapRep = NSBitmapImageRep(data: tiffData),
+          let pngData = bitmapRep.representation(using: .png, properties: [:]) else { return }
+    
+    let outputPath = "\(escapedIconPath)/icon_\(size / scale)x\(size / scale)\(scale > 1 ? "@2x" : "").png"
+    
+    do {
+        try pngData.write(to: URL(fileURLWithPath: outputPath))
+        try runSipsCommand(size: size, outputPath: outputPath, g: g)
+    } catch {
+        print("Error processing size \(size): \(error)")
+    }
+}
+
+//-------------------------------------------------------------------------------------------------
+// RUN SIPS COMMAND
+//-------------------------------------------------------------------------------------------------
+func runSipsCommand(size: Int, outputPath: String, g: GlobalVariables) throws {
+    let command = "sips -s format png -z \(size) \(size) \(outputPath) --out \(outputPath)"
+    let process = Process()
+    
+    process.launchPath = "/bin/bash"
+    process.arguments = ["-c", command]
+    
+    let outputPipe = Pipe()
+    let errorPipe = Pipe()
+    
+    process.standardOutput = outputPipe
+    process.standardError = errorPipe
+    
+    process.launch()
+    process.waitUntilExit()
+    
+    let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+    if let output = String(data: outputData, encoding: .utf8) {
+        g.outputText = output
+    }
+}
+
+//-------------------------------------------------------------------------------------------------
+// CREATE ROUNDED CORNERS
+//-------------------------------------------------------------------------------------------------
 func createRoundedImage(from path: String, size: Int) -> NSImage? {
     guard let image = NSImage(contentsOfFile: path) else { return nil }
-    
-    
-    
+
     // Ensure newSize is valid
     guard size > 0 else {
         print("Invalid newSize: \(size). Returning nil.")
         return nil
     }
-    
+
     
     let roundedRect = NSRect(x: 0, y: 0, width: size, height: size)
     // Calculate radius
@@ -236,7 +325,10 @@ extension NSBitmapImageRep {
         return self.representation(using: .png, properties: [:])
     }
 }
-// RUN FOR SEPERATE .icns files
+
+//-------------------------------------------------------------------------------------------------
+// PART 2: RUN FOR SEPERATE .icns files
+//-------------------------------------------------------------------------------------------------
 func runShellCommand2(res: Int, g: GlobalVariables) {
     
     let process = Process()
@@ -386,7 +478,7 @@ struct ContentView: View {
     }
 }
 
-// COMMOND ELEMENTS
+// COMMON ELEMENTS
 struct CommonView: View {
     @EnvironmentObject var g: GlobalVariables // Access the global variables
     
