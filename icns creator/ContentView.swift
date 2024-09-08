@@ -4,10 +4,12 @@
 //
 //  Created by alp tugan on 10.08.2023.
 //
+//  Update: v2.2 on 07.09.2024
 
 import SwiftUI
 import Foundation
 import Cocoa
+import Combine
 
 
 extension NSOpenPanel {
@@ -75,7 +77,7 @@ func runShellCommand(g: GlobalVariables) {
 }
 
 func processImage(size: Int, scale: Int, escapedImagePath: String, escapedIconPath: String, g: GlobalVariables) {
-    guard let roundedImage = createRoundedImage(from: escapedImagePath, size: size, _isRoundCornersEnabled: g.enableRoundedCorners) else { return }
+    guard let roundedImage = createRoundedImage(from: escapedImagePath, size: size, _isRoundCornersEnabled: g.enableRoundedCorners, _enableShadow: g.enableIconShadow) else { return }
     
     guard let tiffData = roundedImage.tiffRepresentation,
           let bitmapRep = NSBitmapImageRep(data: tiffData),
@@ -119,7 +121,7 @@ func runSipsCommand(size: Int, outputPath: String, g: GlobalVariables) throws {
 //-------------------------------------------------------------------------------------------------
 // CREATE ROUNDED CORNERS
 //-------------------------------------------------------------------------------------------------
-func createRoundedImage(from path: String, size: Int, _isRoundCornersEnabled: Bool) -> NSImage? {
+func createRoundedImage(from path: String, size: Int, _isRoundCornersEnabled: Bool, _enableShadow: Bool) -> NSImage? {
     guard let image = NSImage(contentsOfFile: path) else { return nil }
 
     // Ensure size is valid
@@ -179,16 +181,17 @@ func createRoundedImage(from path: String, size: Int, _isRoundCornersEnabled: Bo
     scaledImage.unlockFocus()
 
     // Prepare to draw the shadow for the scaled image
-    let shadow = NSShadow()
-    let shadowRadius = floor(Double(scaledSize) * 0.034)
-    shadow.shadowOffset = NSSize(width: 0, height: -1)
-    shadow.shadowBlurRadius = CGFloat(shadowRadius)  // Set shadow blur radius
-    shadow.shadowColor = NSColor.black.withAlphaComponent(0.3)  // Set shadow color
-
-    // Draw the shadow and the scaled image
-    finalImage.lockFocus()
-    shadow.set()
-    
+    if(_enableShadow) {
+        let shadow = NSShadow()
+        let shadowRadius = floor(Double(scaledSize) * 0.034)
+        shadow.shadowOffset = NSSize(width: 0, height: -1)
+        shadow.shadowBlurRadius = CGFloat(shadowRadius)  // Set shadow blur radius
+        shadow.shadowColor = NSColor.black.withAlphaComponent(0.3)  // Set shadow color
+        
+        // Draw the shadow and the scaled image
+        finalImage.lockFocus()
+        shadow.set()
+    }
     // Draw the scaled image in the final image
     scaledImage.draw(in: NSRect(x: xOffset, y: yOffset, width: scaledSize, height: scaledSize), from: NSRect.zero, operation: .sourceOver, fraction: 1.0)
 
@@ -310,7 +313,7 @@ struct ContentView: View {
         // NAVIGATION MENU
         // If image is selected then show the tabs
         if g.selectedImage != nil {
-            VStack(spacing: 0) {
+            VStack() {
                 Picker("", selection: $selectedTab) {
                     Text(".iconset").tag(0)
                     Text(".icns").tag(1)
@@ -320,39 +323,41 @@ struct ContentView: View {
                 .padding()
                 .frame(maxWidth: .infinity)
                 .accentColor(.blue)
-                //.background(Color.gray.opacity(0.15)) // Set background color
-                
-                
-                switch selectedTab {
-                case 0:
-                    GenerateView_ICONSET()
-                case 1:
-                    GenerateView_ICNS()
-                default:
-                    EmptyView()
+                .onChange(of: selectedTab) { newValue in
+                    let newHeight: CGFloat = newValue == 0 ? 500 : 550
+                    resizeWindow(g: g, to: CGSize(width: g.win.size.width, height: newHeight))
                 }
-                Spacer()
-                
-                
-                //   CommonView()
+                .onAppear {
+                    resizeWindow(g: g, to: CGSize(width: g.win.size.width, height: 500))
+                }
             }
         }
-        //.overlay(
-            // Some problematic positioning issue
-            // If some one can fix it, would be great!!!!
+        
+        // Contents
         ZStack {
             CommonView()
                 .onAppear{
                     g.win.size.width = 350
-                    g.win.size.height = 450
+                    g.win.size.height = 250
                     g.dragAreaPos.x = 210
-                    g.dragAreaPos.y = -50
+                    g.dragAreaPos.y = -250
                 }
-                .position(x: g.dragAreaPos.x, y: g.selectedImage != nil ? -50 : g.win.size.height * 0.65)
-            //)
+        }
+        
+        // Generate  Buttons
+        VStack() {
+            switch selectedTab {
+            case 0:
+                GenerateView_ICONSET()
+            case 1:
+                GenerateView_ICNS()
+            default:
+                EmptyView()
+            }
         }
     }
 }
+
 
 // COMMON ELEMENTS
 struct CommonView: View {
@@ -360,10 +365,10 @@ struct CommonView: View {
 
     var body: some View {
         GeometryReader { geo in
-            ZStack (alignment: .center){
+            ZStack {
                 RoundedRectangle(cornerRadius: 10)
                     .fill(.white)
-                    .frame(width:280,height: 250,alignment: Alignment.top) // the wxh of the drop area
+                    .frame(width:280,height: 250) // The size of drop image area
                     .overlay(
                         Group {
                             GeometryReader { geometry in
@@ -393,7 +398,7 @@ struct CommonView: View {
                                                         //.scaledToFit()
                                                         .frame(width: g.imgW, height: g.imgH)
                                                         .cornerRadius(27.1)
-                                                }.position(x:localFrame.midX, y: localFrame.maxY).onAppear{
+                                                }.position(x:localFrame.midX, y: localFrame.maxY).onAppear{ // CEnter dropped image
                                                     // Print the value of g.imgW to the console
                                                     // print("g.imgW: \(g.imgW)") 150 px
                                                 }
@@ -448,30 +453,71 @@ struct CommonView: View {
                                             }
                                         }.position(x:localFrame.midX, y: localFrame.maxY + 20)
                                         
-                                        // Toggle for enabling ROUNDED corners
-                                        HStack {
-                                            Text("Enable Rounded Corners")
-                                                .font(.subheadline)
-                                                .foregroundColor(.gray)
-                                            Spacer()
-                                            
-                                            Toggle(isOn: $g.enableRoundedCorners) {
-                                                //Label("Flag", systemImage: "flag.fill")
+                                        //-------------------------------------------------------------------------------------
+                                        // ICON OPTIONS
+                                        //-------------------------------------------------------------------------------------
+                                        if g.selectedImage != nil {
+                                            // Toggle for enabling ROUNDED corners
+                                            HStack {
+                                                Text("Enable Rounded Corners")
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.gray)
+                                                Spacer()
+                                                
+                                                Toggle(isOn: $g.enableRoundedCorners) {
+                                                    //Label("Flag", systemImage: "flag.fill")
+                                                }
+                                                .toggleStyle(SwitchToggleStyle())
+                                                .labelsHidden()
+                                                .fixedSize()
+                                                .scaleEffect(0.8)
+                                                
+                                                
                                             }
-                                            .toggleStyle(SwitchToggleStyle())
-                                            .labelsHidden()
-                                            .fixedSize()
-                                            .scaleEffect(0.8)
+                                            .padding(.top, 10)
+                                            .position(x: localFrame.midX, y: localFrame.maxY + 50) // Position the toggle
                                             
-
+                                            HStack {
+                                                Text("Enable Rounded Corners")
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.gray)
+                                                Spacer()
+                                                
+                                                Toggle(isOn: $g.enableRoundedCorners) {
+                                                    //Label("Flag", systemImage: "flag.fill")
+                                                }
+                                                .toggleStyle(SwitchToggleStyle())
+                                                .labelsHidden()
+                                                .fixedSize()
+                                                .scaleEffect(0.8)
+                                                
+                                                
+                                            }
+                                            .padding(.top, 10)
+                                            .position(x: localFrame.midX, y: localFrame.maxY + 75) // Position the toggle
+                                            
+                                            HStack {
+                                                Text("Enable Original Padding")
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.gray)
+                                                Spacer()
+                                                
+                                                Toggle(isOn: $g.enablePadding) {
+                                                    //Label("Flag", systemImage: "flag.fill")
+                                                }
+                                                .toggleStyle(SwitchToggleStyle())
+                                                .labelsHidden()
+                                                .fixedSize()
+                                                .scaleEffect(0.8)
+                                                
+                                                
+                                            }
+                                            .padding(.top, 10)
+                                            .position(x: localFrame.midX, y: localFrame.maxY + 100) // Position the toggle
                                         }
-                                        .padding(.top, 10)
-                                        .position(x: localFrame.midX, y: localFrame.maxY + 50) // Position the toggle
                                     }
-                                    
-                                    
+
                                 }
-                                .frame(maxWidth: .infinity, maxHeight: .infinity) // Image drawing on canvas
                             }
                         }
                     ) // Inside The content
@@ -497,11 +543,9 @@ struct CommonView: View {
                         selectFileFromSystem(g:g)
                     } // Show Browse window
             }
-            .onAppear {
-                g.win.size = geo.size
-            }
+            .frame(maxWidth: .infinity, alignment: .top)
+            .padding(.top, g.selectedImage == nil ? 20 : 0)
         }.environmentObject(g.win)
-        
     }
 }
 
@@ -509,21 +553,21 @@ struct CommonView: View {
 // ONLY CREATE ICONSET FOLDER
 struct GenerateView_ICONSET: View {
     @EnvironmentObject var g: GlobalVariables // Access the global variables
-    @State private var isProces: Bool = false // Boolean variable available across functions
 
     var body: some View {
-        
-        
         // After the image is display in the container show Convert <Button>
         if g.selectedImage != nil {
             VStack {
+                Spacer(minLength: 165)
                 HStack {
                     Button("Generate .iconset") {
                         runShellCommand(g:g)
                         generateCombinedIcns(g:g)
                     }
                 }
-            }.position(x: g.dragAreaPos.x * 0.85, y: 350)
+                Spacer() // Optional: Space below the button
+            }
+            .frame(maxHeight: .infinity) // Ensure VStack takes full height
         }
     }
 }
@@ -537,12 +581,10 @@ struct GenerateView_ICNS: View {
         return !g.isToggled_All && !g.isToggled_16 && !g.isToggled_32 && !g.isToggled_64 && !g.isToggled_128 && !g.isToggled_256 && !g.isToggled_512 && !g.isToggled_1024
     }
     var body: some View {
-        /*Text("Swap Content")
-            .font(.largeTitle)
-            .padding()*/
-        
-        VStack (alignment: .center) {
+        VStack {
+            Spacer(minLength: 120)
             if g.selectedImage != nil {
+                Spacer()
                 HStack {
                     Toggle("All", isOn: $g.isToggled_All)
                         .onChange(of: g.isToggled_All) {
@@ -569,10 +611,7 @@ struct GenerateView_ICNS: View {
                 } // Toggle buttons second row
                 HStack {
                     Button("Generate .icns") {
-                        //resizeAndSaveImage(imagePath: imagePath, width: imgW, height: imgW)
-                        //print("Toggle 1 value: \(isToggled_16)")
                         if(g.isToggled_16 == true) {
-                            //resizeAndSaveImage(imagePath: imagePath, width: 16, height: 16)
                             runShellCommand2(res:16,g:g)
                         }
                         
@@ -602,13 +641,32 @@ struct GenerateView_ICNS: View {
                     }
                     .disabled(allTogglesOff)
                 } // Button
+                Spacer() // Optional: Space below the button
             }
-        }.position(x: g.dragAreaPos.x * 0.85, y: 350)
+        }
+        .frame(maxHeight: .infinity) // Ensure VStack takes full height
+
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+    }
+}
+
+// Global function to resize the window
+func resizeWindow(g: GlobalVariables, to size: CGSize) {
+    // Print the size for debugging
+    print("Resizing window to \(size)")
+    
+    if let window = NSApplication.shared.windows.first {
+        window.setContentSize(size)
+        // Optionally, you can also center the window
+        //window.center()
+        
+        window.disableCursorRects()
+        window.styleMask.remove(.resizable)
+        
     }
 }

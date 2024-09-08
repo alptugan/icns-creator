@@ -38,6 +38,8 @@ class GlobalVariables: ObservableObject {
     @Published var win = WindowSize()
     
     @Published var enableRoundedCorners: Bool = false // Toggle state
+    @Published var enableIconShadow: Bool = false // Toggle state
+    @Published var enablePadding: Bool = false // Toggle state
 
     
     var winWidth: CGFloat {
@@ -51,22 +53,28 @@ struct icns_creatorApp: App {
     @StateObject private var globalVariables = GlobalVariables() // Instantiate the GlobalVariables object as a state object
 
     var body: some Scene {
+        let w:CGFloat = 350
+        let h:CGFloat = 320
         
         WindowGroup {
-            let w:CGFloat = 350
-            let h:CGFloat = 450
+            
             
             ContentView()
-                .frame(minWidth: w,maxWidth: w,minHeight: h,maxHeight: h)
-                .fixedSize(horizontal: false, vertical: true)
+                .frame(minWidth: w,maxWidth: w,minHeight: h)
                 .environmentObject(globalVariables)
+                .onAppear {
+
+                    DispatchQueue.main.async {
+                        resizeWindow(g:globalVariables,to: CGSize(width: w, height: h))
+                        
+                    }
+                }
                  
         }
-        //.defaultSize(CGSize(width: 600, height: 400))
+        //.defaultSize(CGSize(width: w, height: h))
         //.defaultPosition(.center)
-        .windowResizabilityContentSize()
+        //.windowResizabilityContentSize()
         .windowStyle(HiddenTitleBarWindowStyle())
-
     }
 }
 
