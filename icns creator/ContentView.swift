@@ -69,7 +69,7 @@ func runShellCommand(g: GlobalVariables) {
     }
     
     let sizes: [Int] = [16, 32, 128, 256, 512]
-    
+
     for size in sizes {
         processImage(size: size, scale: 1, escapedImagePath: escapedImagePath, escapedIconPath: escapedIconPath, g: g)
         processImage(size: size * 2, scale: 2, escapedImagePath: escapedImagePath, escapedIconPath: escapedIconPath, g: g)
@@ -77,8 +77,9 @@ func runShellCommand(g: GlobalVariables) {
 }
 
 func processImage(size: Int, scale: Int, escapedImagePath: String, escapedIconPath: String, g: GlobalVariables) {
-    guard let roundedImage = createRoundedImage(from: escapedImagePath, size: size, _isRoundCornersEnabled: g.enableRoundedCorners, _enableShadow: g.enableIconShadow) else { return }
     
+    guard let roundedImage = createRoundedImage(from: escapedImagePath, size: size, _isRoundCornersEnabled: g.enableRoundedCorners, _enableShadow: g.enableIconShadow, _enablePadding: g.enablePadding) else { return }
+
     guard let tiffData = roundedImage.tiffRepresentation,
           let bitmapRep = NSBitmapImageRep(data: tiffData),
           let pngData = bitmapRep.representation(using: .png, properties: [:]) else { return }
@@ -88,6 +89,7 @@ func processImage(size: Int, scale: Int, escapedImagePath: String, escapedIconPa
     do {
         try pngData.write(to: URL(fileURLWithPath: outputPath))
         try runSipsCommand(size: size, outputPath: outputPath, g: g)
+
     } catch {
         print("Error processing size \(size): \(error)")
     }
@@ -116,33 +118,39 @@ func runSipsCommand(size: Int, outputPath: String, g: GlobalVariables) throws {
     if let output = String(data: outputData, encoding: .utf8) {
         g.outputText = output
     }
+    
 }
 
 //-------------------------------------------------------------------------------------------------
 // CREATE ROUNDED CORNERS
 //-------------------------------------------------------------------------------------------------
-func createRoundedImage(from path: String, size: Int, _isRoundCornersEnabled: Bool, _enableShadow: Bool) -> NSImage? {
+func createRoundedImage(from path: String, size: Int, _isRoundCornersEnabled: Bool, _enableShadow: Bool, _enablePadding: Bool) -> NSImage? {
     guard let image = NSImage(contentsOfFile: path) else { return nil }
+   // let image = loadImage(named: path)
 
     // Ensure size is valid
     guard size > 0 else {
         print("Invalid size: \(size). Returning nil.")
         return nil
     }
-
+    
     // Scale down sizes according to the specified rules
-    let scaledSize: Int
-    switch size {
-    case 1024: scaledSize = 824
-    case 512:  scaledSize = 412
-    case 256:  scaledSize = 206
-    case 128:  scaledSize = 103
-    case 64:   scaledSize = 52
-    case 32:   scaledSize = 28
-    case 16:   scaledSize = 14
-    default:   scaledSize = size // Fallback to original size if not specified
+    var scaledSize: Int
+    if (_enablePadding) {
+        switch size {
+        case 1024: scaledSize = 824
+        case 512:  scaledSize = 412
+        case 256:  scaledSize = 206
+        case 128:  scaledSize = 103
+        case 64:   scaledSize = 52
+        case 32:   scaledSize = 28
+        case 16:   scaledSize = 14
+        default:   scaledSize = size // Fallback to original size if not specified
+        }
+    }else{
+        scaledSize = size
     }
-
+    
     // Create a new NSImage with the original size
     let finalImage = NSImage(size: NSSize(width: size, height: size))
 
@@ -200,6 +208,21 @@ func createRoundedImage(from path: String, size: Int, _isRoundCornersEnabled: Bo
     return finalImage
 }
 
+func loadImage(named imageName: String) -> NSImage? {
+    // Attempt to load the image from the app bundle
+    if let image = NSImage(named: imageName) {
+        return image
+    }
+    
+    // Optionally, you can try loading from a specific path
+    if let path = Bundle.main.path(forResource: imageName, ofType: "png") {
+        guard let image = NSImage(contentsOfFile: path) else { return nil }
+        return image
+    }
+    
+    return nil // Return nil if the image could not be loaded
+}
+
 extension NSBitmapImageRep {
     func pngRepresentation() -> Data? {
         return self.representation(using: .png, properties: [:])
@@ -210,16 +233,35 @@ extension NSBitmapImageRep {
 // PART 2: RUN FOR SEPERATE .icns files
 //-------------------------------------------------------------------------------------------------
 func runShellCommand2(res: Int, g: GlobalVariables) {
-    
+
     let process = Process()
-    let escapedImagePath = g.imagePath!.replacingOccurrences(of: " ", with: "\\ ")
-    //let escapedImagePath = imagePath?.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
+    // file path with extension
+    var escapedImagePath = g.imagePath!.replacingOccurrences(of: " ", with: "\\ ")
     
-    //let idd = escapedImagePath?.lastIndex(of: ".")
-    //let fname = escapedImagePath.
-    //let subi = escapedImagePath?[&idd...]
+    // file path without extension
+    var escapedImagePath2 = g.imagePath!.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
     
-    let escapedImagePath2 = g.imagePath!.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
+    
+    guard let roundedImage = createRoundedImage(from: escapedImagePath, size: res, _isRoundCornersEnabled: g.enableRoundedCorners, _enableShadow: g.enableIconShadow, _enablePadding: g.enablePadding) else { return }
+
+    guard let tiffData = roundedImage.tiffRepresentation,
+          let bitmapRep = NSBitmapImageRep(data: tiffData),
+          let pngData = bitmapRep.representation(using: .png, properties: [:]) else { return }
+    
+    
+    let outputPath = "\(String(describing:escapedImagePath2 ))_\(String(res))x\(String(res)).png"
+    
+    escapedImagePath = outputPath.replacingOccurrences(of: " ", with: "\\ ")
+    escapedImagePath2 = outputPath.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
+    
+    
+    do {
+        try pngData.write(to: URL(fileURLWithPath: outputPath))
+
+    } catch {
+        print("Error processing size \(res): \(error)")
+    }
+    
     
     var command = ""
     
@@ -261,6 +303,15 @@ func runShellCommand2(res: Int, g: GlobalVariables) {
     }
     
     process2.waitUntilExit()
+    
+    // Delete the generated PNG file
+    let fileManager = FileManager.default
+    do {
+        try fileManager.removeItem(atPath: outputPath)
+        print("Successfully deleted PNG file at path: \(outputPath)")
+    } catch {
+        print("Error deleting PNG file: \(error)")
+    }
 }
 
 // GENERATE .ICONSET File
@@ -272,7 +323,7 @@ func generateCombinedIcns(g: GlobalVariables) {
     let escapedIconPath = escapedImageName + ".iconset"
     
     
-    let fileManager = FileManager.default
+   /* let fileManager = FileManager.default
     if fileManager.fileExists(atPath: escapedIconPath) {
         print("File exists iconset")
     } else {
@@ -281,7 +332,11 @@ func generateCombinedIcns(g: GlobalVariables) {
         mkdirProcess.launchPath = "/bin/bash"
         mkdirProcess.arguments = ["-c", "mkdir " + escapedIconPath]
         mkdirProcess.launch()
-    }
+    }*/
+    let mkdirProcess = Process()
+    mkdirProcess.launchPath = "/bin/bash"
+    mkdirProcess.arguments = ["-c", "mkdir " + escapedIconPath]
+    mkdirProcess.launch()
     
     let command = "iconutil -c icns \(escapedIconPath)"
     
@@ -389,19 +444,14 @@ struct CommonView: View {
                                             VStack {
                                                 ZStack {
                                                     RoundedRectangle(cornerRadius: 27.1)
-                                                    //.stroke(Color.blue, style: StrokeStyle(lineWidth: 4))
                                                         .frame(width: g.imgW , height: g.imgH)
                                                         .shadow(radius: 10)
                                                     
                                                     Image(nsImage: g.selectedImage!)
                                                         .resizable()
-                                                        //.scaledToFit()
                                                         .frame(width: g.imgW, height: g.imgH)
                                                         .cornerRadius(27.1)
-                                                }.position(x:localFrame.midX, y: localFrame.maxY).onAppear{ // CEnter dropped image
-                                                    // Print the value of g.imgW to the console
-                                                    // print("g.imgW: \(g.imgW)") 150 px
-                                                }
+                                                }.position(x:localFrame.midX, y: localFrame.maxY)
                                                 
                                             }
                                         }
@@ -424,9 +474,6 @@ struct CommonView: View {
                                                     .opacity(g.dragOver ? 0 : 1)
                                             }
                                         }.frame(width: g.imgW, height: g.imgH)
-                                        
-                                        //Text("No image selected")
-                                        //showBrowseButton()
                                     }
                                     
                                     // Display the text always
@@ -478,13 +525,12 @@ struct CommonView: View {
                                             .position(x: localFrame.midX, y: localFrame.maxY + 50) // Position the toggle
                                             
                                             HStack {
-                                                Text("Enable Rounded Corners")
+                                                Text("Enable Subtle Shadow")
                                                     .font(.subheadline)
                                                     .foregroundColor(.gray)
                                                 Spacer()
                                                 
-                                                Toggle(isOn: $g.enableRoundedCorners) {
-                                                    //Label("Flag", systemImage: "flag.fill")
+                                                Toggle(isOn: $g.enableIconShadow) {
                                                 }
                                                 .toggleStyle(SwitchToggleStyle())
                                                 .labelsHidden()
@@ -503,7 +549,6 @@ struct CommonView: View {
                                                 Spacer()
                                                 
                                                 Toggle(isOn: $g.enablePadding) {
-                                                    //Label("Flag", systemImage: "flag.fill")
                                                 }
                                                 .toggleStyle(SwitchToggleStyle())
                                                 .labelsHidden()
@@ -658,7 +703,7 @@ struct ContentView_Previews: PreviewProvider {
 // Global function to resize the window
 func resizeWindow(g: GlobalVariables, to size: CGSize) {
     // Print the size for debugging
-    print("Resizing window to \(size)")
+    //print("Resizing window to \(size)")
     
     if let window = NSApplication.shared.windows.first {
         window.setContentSize(size)

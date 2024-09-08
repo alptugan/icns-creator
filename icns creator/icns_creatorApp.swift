@@ -4,6 +4,7 @@
 //
 //  Created by alp tugan on 10.08.2023.
 //  Update: v2.2 on 04.09.2024
+//  Update: v2.4 on 08.09.2024
 //
 
 import SwiftUI
@@ -37,9 +38,9 @@ class GlobalVariables: ObservableObject {
     @Published var selectedImage = NSImage(named: "image")
     @Published var win = WindowSize()
     
-    @Published var enableRoundedCorners: Bool = false // Toggle state
-    @Published var enableIconShadow: Bool = false // Toggle state
-    @Published var enablePadding: Bool = false // Toggle state
+    @Published var enableRoundedCorners: Bool = true // Toggle state
+    @Published var enableIconShadow: Bool = true // Toggle state
+    @Published var enablePadding: Bool = true // Toggle state
 
     
     var winWidth: CGFloat {
