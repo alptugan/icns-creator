@@ -5,6 +5,7 @@
 //  Created by alp tugan on 10.08.2023.
 //
 //  Update: v2.2 on 07.09.2024
+//  Update: v3.4 on 09.09.2024 -scaleFactor warnings cleared, Thread optimization (waiting)
 
 import SwiftUI
 import Foundation
@@ -379,11 +380,16 @@ struct ContentView: View {
                 .frame(maxWidth: .infinity)
                 .accentColor(.blue)
                 .onChange(of: selectedTab) { newValue in
-                    let newHeight: CGFloat = newValue == 0 ? 500 : 550
+                    // window size
+                    let newHeight: CGFloat = newValue == 0 ? 520 : 570
                     resizeWindow(g: g, to: CGSize(width: g.win.size.width, height: newHeight))
+                    NSApplication.shared.activate(ignoringOtherApps: true)
+
                 }
                 .onAppear {
-                    resizeWindow(g: g, to: CGSize(width: g.win.size.width, height: 500))
+                    resizeWindow(g: g, to: CGSize(width: g.win.size.width, height: 520))
+                    NSApplication.shared.activate(ignoringOtherApps: true)
+
                 }
             }
         }
@@ -396,6 +402,7 @@ struct ContentView: View {
                     g.win.size.height = 250
                     g.dragAreaPos.x = 210
                     g.dragAreaPos.y = -250
+                    NSApplication.shared.activate(ignoringOtherApps: true)
                 }
         }
         
@@ -417,7 +424,9 @@ struct ContentView: View {
 // COMMON ELEMENTS
 struct CommonView: View {
     @EnvironmentObject var g: GlobalVariables // Access the global variables
-
+    @State private var showScrollBars: String = "When scrolling"
+       @State private var clickAction: String = "Jump to the next page"
+    
     var body: some View {
         GeometryReader { geo in
             ZStack {
@@ -464,7 +473,7 @@ struct CommonView: View {
                                                 let localFrame = geo.frame(in: .local)
                                                 Image("imgcolor")
                                                     .resizable()
-                                                    .scaleEffect(g.dragOver ? 1 : 0)
+                                                    .scaleEffect(g.dragOver ? 1.0 : 0.1)
                                                     .position(x:g.dragOver ? localFrame.midX : localFrame.midX, y: localFrame.maxY - 20)
                                                 
                                                 Image("drag")
@@ -503,62 +512,71 @@ struct CommonView: View {
                                         //-------------------------------------------------------------------------------------
                                         // ICON OPTIONS
                                         //-------------------------------------------------------------------------------------
+                                        
                                         if g.selectedImage != nil {
                                             // Toggle for enabling ROUNDED corners
-                                            HStack {
-                                                Text("Enable Rounded Corners")
-                                                    .font(.subheadline)
-                                                    .foregroundColor(.gray)
-                                                Spacer()
+                                            VStack(alignment: .leading, spacing: 1) {
+                                                Text("Options")
+                                                    .font(.callout)
                                                 
-                                                Toggle(isOn: $g.enableRoundedCorners) {
-                                                    //Label("Flag", systemImage: "flag.fill")
+                                                HStack {
+                                                    Text("Enable Rounded Corners")
+                                                        .font(.footnote)
+                                                        .foregroundColor(.gray)
+                                                    Spacer()
+                                                    
+                                                    Toggle(isOn: $g.enableRoundedCorners) {
+                                                        //Label("Flag", systemImage: "flag.fill")
+                                                    }
+                                                    .toggleStyle(SwitchToggleStyle())
+                                                    .labelsHidden()
+                                                    .scaleEffect(0.7)
+                                                    .offset(x:5)
                                                 }
-                                                .toggleStyle(SwitchToggleStyle())
-                                                .labelsHidden()
-                                                .fixedSize()
-                                                .scaleEffect(0.8)
                                                 
+                                                //.position(x: localFrame.midX, y: 0) // Position the toggle
                                                 
-                                            }
-                                            .padding(.top, 10)
-                                            .position(x: localFrame.midX, y: localFrame.maxY + 50) // Position the toggle
-                                            
-                                            HStack {
-                                                Text("Enable Subtle Shadow")
-                                                    .font(.subheadline)
-                                                    .foregroundColor(.gray)
-                                                Spacer()
-                                                
-                                                Toggle(isOn: $g.enableIconShadow) {
+                                                HStack {
+                                                    Text("Enable Subtle Shadow")
+                                                        .font(.footnote)
+                                                        .foregroundColor(.gray)
+                                                    Spacer()
+                                                    
+                                                    Toggle(isOn: $g.enableIconShadow) {
+                                                    }
+                                                    .toggleStyle(SwitchToggleStyle())
+                                                    .labelsHidden()
+                                                    .fixedSize()
+                                                    .scaleEffect(0.7)
+                                                    .offset(x:5)
                                                 }
-                                                .toggleStyle(SwitchToggleStyle())
-                                                .labelsHidden()
-                                                .fixedSize()
-                                                .scaleEffect(0.8)
                                                 
-                                                
-                                            }
-                                            .padding(.top, 10)
-                                            .position(x: localFrame.midX, y: localFrame.maxY + 75) // Position the toggle
-                                            
-                                            HStack {
-                                                Text("Enable Original Padding")
-                                                    .font(.subheadline)
-                                                    .foregroundColor(.gray)
-                                                Spacer()
-                                                
-                                                Toggle(isOn: $g.enablePadding) {
+                                                HStack {
+                                                    Text("Enable Original Padding")
+                                                        .font(.footnote)
+                                                        .foregroundColor(.gray)
+                                                    Spacer()
+                                                    
+                                                    Toggle(isOn: $g.enablePadding) {
+                                                    }
+                                                    .toggleStyle(SwitchToggleStyle())
+                                                    .labelsHidden()
+                                                    .fixedSize()
+                                                    .scaleEffect(0.7)
+                                                    .offset(x:5)
                                                 }
-                                                .toggleStyle(SwitchToggleStyle())
-                                                .labelsHidden()
-                                                .fixedSize()
-                                                .scaleEffect(0.8)
-                                                
-                                                
                                             }
-                                            .padding(.top, 10)
-                                            .position(x: localFrame.midX, y: localFrame.maxY + 100) // Position the toggle
+                                            .padding(.all, 12)
+                                            //.frame(width: g.win.size.width - 70, height: 300)
+                                            .background(Color.gray.opacity(0.05))
+                                            .cornerRadius(10)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .strokeBorder(Color.secondary.opacity(0.4), antialiased: false)
+                                                //.stroke(Color.secondary.opacity(0.5), lineWidth: 1) // Stroke color and width
+                                                    
+                                            )
+                                            .position(x: localFrame.midX, y: localFrame.maxY + 95) // Position the toggle
                                         }
                                     }
 
@@ -567,20 +585,21 @@ struct CommonView: View {
                         }
                     ) // Inside The content
                     .onDrop(of: ["public.file-url"], isTargeted: Binding<Bool>(get: { g.dragOver }, set: { g.dragOver = $0 }).animation()) { providers in
-                        
+
                         providers.first?.loadDataRepresentation(forTypeIdentifier: "public.file-url", completionHandler: { data, error in
-                            
-                            if let imageData = data, let path = NSString(data: imageData, encoding: 4),
+
+                            if let imageData = data, let path = NSString(data: imageData, encoding: String.Encoding.utf8.rawValue), // Use UTF-8 encoding
                                let url = URL(string: path as String) {
-                                
-                                g.imagePath = url.path
-                                
-                                let image = NSImage(contentsOf: url)
+
+                                // Ensure updates to the model happen on the main thread
                                 DispatchQueue.main.async {
-                                    g.selectedImage = image
+                                    g.imagePath = url.path
+                                    
+                                    if let image = NSImage(contentsOf: url) {
+                                        g.selectedImage = image
+                                    }
                                 }
                             }
-                            
                         })
                         return true
                     } // Show dropped image
@@ -603,7 +622,7 @@ struct GenerateView_ICONSET: View {
         // After the image is display in the container show Convert <Button>
         if g.selectedImage != nil {
             VStack {
-                Spacer(minLength: 165)
+                Spacer(minLength: 185)
                 HStack {
                     Button("Generate .iconset") {
                         runShellCommand(g:g)
@@ -627,7 +646,7 @@ struct GenerateView_ICNS: View {
     }
     var body: some View {
         VStack {
-            Spacer(minLength: 120)
+            Spacer(minLength: 150)
             if g.selectedImage != nil {
                 Spacer()
                 HStack {
@@ -654,6 +673,8 @@ struct GenerateView_ICNS: View {
                     Toggle("512x512", isOn: $g.isToggled_512)
                     Toggle("1024x1024", isOn: $g.isToggled_1024)
                 } // Toggle buttons second row
+                Spacer(minLength: 5)
+
                 HStack {
                     Button("Generate .icns") {
                         if(g.isToggled_16 == true) {

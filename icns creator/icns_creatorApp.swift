@@ -5,7 +5,7 @@
 //  Created by alp tugan on 10.08.2023.
 //  Update: v2.2 on 04.09.2024
 //  Update: v2.4 on 08.09.2024
-//
+//  Update: v3.4 on 09.09.2024
 
 import SwiftUI
 
@@ -41,11 +41,6 @@ class GlobalVariables: ObservableObject {
     @Published var enableRoundedCorners: Bool = true // Toggle state
     @Published var enableIconShadow: Bool = true // Toggle state
     @Published var enablePadding: Bool = true // Toggle state
-
-    
-    var winWidth: CGFloat {
-        return winSize.width - winSize.width * 0.85
-    }
 }
 
 

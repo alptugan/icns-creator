@@ -443,7 +443,7 @@
 				INFOPLIST_KEY_NSDocumentsFolderUsageDescription = "";
 				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "";
 				INFOPLIST_KEY_NSFileProviderDomainUsageDescription = "";
-				INFOPLIST_KEY_NSHumanReadableCopyright = 2023;
+				INFOPLIST_KEY_NSHumanReadableCopyright = 2024;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -484,7 +484,7 @@
 				INFOPLIST_KEY_NSDocumentsFolderUsageDescription = "";
 				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "";
 				INFOPLIST_KEY_NSFileProviderDomainUsageDescription = "";
-				INFOPLIST_KEY_NSHumanReadableCopyright = 2023;
+				INFOPLIST_KEY_NSHumanReadableCopyright = 2024;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
