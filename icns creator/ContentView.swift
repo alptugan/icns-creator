@@ -6,6 +6,7 @@
 //
 //  Update: v2.2 on 07.09.2024
 //  Update: v3.4 on 09.09.2024 -scaleFactor warnings cleared, Thread optimization (waiting)
+//  Update: v3.5 on 14.09.2024 -ask for destination path: destinationPath,selectedImageName
 
 import SwiftUI
 import Foundation
@@ -36,10 +37,20 @@ extension NSOpenPanel {
 }
 
 func selectFileFromSystem(g: GlobalVariables) {
-    NSOpenPanel.openImage { result, url in
-        if case let .success(image) = result {
-            g.selectedImage = image
-            g.imagePath = url?.path
+    let openPanel = NSOpenPanel()
+    openPanel.allowedFileTypes = ["png", "jpg", "jpeg"] // Specify allowed file types
+    openPanel.canChooseFiles = true
+    openPanel.canChooseDirectories = false
+
+    openPanel.begin { result in
+        if result == .OK, let url = openPanel.url {
+            if let image = NSImage(contentsOf: url) { // Load the image properly
+                g.selectedImage = image
+                g.imagePath = url.path
+                g.selectedImageName = url.deletingPathExtension().lastPathComponent
+            } else {
+                print("Failed to load image.")
+            }
         }
     }
 }
@@ -55,6 +66,7 @@ func runShellCommand(g: GlobalVariables) {
     
     let escapedImagePath = imagePath.replacingOccurrences(of: " ", with: "\\ ")
     let escapedImageName = imagePath.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
+    
     
     let escapedIconPath = "\(escapedImageName).iconset"
     let fileManager = FileManager.default
@@ -323,7 +335,6 @@ func generateCombinedIcns(g: GlobalVariables) {
     
     let escapedIconPath = escapedImageName + ".iconset"
     
-    
    /* let fileManager = FileManager.default
     if fileManager.fileExists(atPath: escapedIconPath) {
         print("File exists iconset")
@@ -356,6 +367,57 @@ func generateCombinedIcns(g: GlobalVariables) {
     
     process.waitUntilExit()
 }
+
+/*func generateCombinedIcns(g: GlobalVariables) {
+    // Create an instance of NSOpenPanel
+    let openPanel = NSOpenPanel()
+    openPanel.canChooseDirectories = true
+    openPanel.canChooseFiles = false
+    openPanel.allowsMultipleSelection = false
+    
+    // Show the panel and handle the user's selection
+    openPanel.begin { response in
+        if response == .OK, let selectedDirectory = openPanel.url {
+            let process = Process()
+            
+            // Escape the image name and construct the iconset path
+            let escapedImageName = g.imagePath!.replacingOccurrences(of: "\\.\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
+            let escapedIconPath = selectedDirectory.appendingPathComponent("\(escapedImageName).iconset").path
+            
+            // Create the iconset directory if it does not exist
+            let fileManager = FileManager.default
+            if !fileManager.fileExists(atPath: escapedIconPath) {
+                do {
+                    try fileManager.createDirectory(atPath: escapedIconPath, withIntermediateDirectories: true, attributes: nil)
+                    print("Created iconset directory at \(escapedIconPath)")
+                } catch {
+                    print("Failed to create directory: \(error.localizedDescription)")
+                    return
+                }
+            } else {
+                print("Iconset directory already exists at \(escapedIconPath)")
+            }
+            
+            // Prepare and execute the command to create the ICNS file
+            let command = "iconutil -c icns \(escapedIconPath)"
+            
+            process.launchPath = "/bin/bash"
+            process.arguments = ["-c", command]
+            
+            let outputPipe = Pipe()
+            process.standardOutput = outputPipe
+            
+            process.launch()
+            
+            let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+            if let output = String(data: outputData, encoding: .utf8) {
+                g.outputText = output
+            }
+            
+            process.waitUntilExit()
+        }
+    }
+}*/
 
 
 // MAIN CONTENT VIEW TABS
@@ -594,7 +656,8 @@ struct CommonView: View {
                                 // Ensure updates to the model happen on the main thread
                                 DispatchQueue.main.async {
                                     g.imagePath = url.path
-                                    
+                                    g.selectedImageName = url.deletingPathExtension().lastPathComponent
+
                                     if let image = NSImage(contentsOf: url) {
                                         g.selectedImage = image
                                     }
@@ -625,8 +688,26 @@ struct GenerateView_ICONSET: View {
                 Spacer(minLength: 185)
                 HStack {
                     Button("Generate .iconset") {
-                        runShellCommand(g:g)
-                        generateCombinedIcns(g:g)
+                        let openPanel = NSOpenPanel()
+                        openPanel.canChooseDirectories = true
+                        openPanel.canChooseFiles = false
+                        openPanel.allowsMultipleSelection = false
+                        
+                        // Show the panel and handle the user's selection
+                        openPanel.begin { response in
+                            if response == .OK, let selectedDirectory = openPanel.url {
+                                g.destinationPath = selectedDirectory.path
+                                /*
+                                print(selectedDirectory.absoluteString) // output: file:///Users/alptugan/Desktop/
+                                print(selectedDirectory.lastPathComponent) // output: Desktop
+                                print(selectedDirectory.absoluteURL) // output: file:///Users/alptugan/Desktop/
+                                 */
+                                print("Destination Path:", selectedDirectory.path) // output: /Users/alptugan/Desktop
+                                
+                                runShellCommand(g:g)
+                                generateCombinedIcns(g:g)
+                            }
+                        }
                     }
                 }
                 Spacer() // Optional: Space below the button
