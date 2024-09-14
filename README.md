@@ -87,7 +87,8 @@ _________________________________________________
 - [x] ~~Set original icon~~
 - [x] ~~Delete PNG file after creation of the individual .icns files~~
 - [ ] Ask for destination to save files...
-- [ ] Better UI to show switch toggle options
+- [x] Better UI to show switch toggle options
+- [ ] Set options for rounded corners: None, Rounded, Circular
 - [ ] Add preview for changed options
 - [ ] Update YouTube video tutotial.
 - [ ] Drag & drop folders or apps to edit their icns props on the fly for better UX. Set the icons using the app. 
