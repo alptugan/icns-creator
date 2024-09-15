@@ -5,7 +5,7 @@
 <p align="center">・・・・・・・・・・ ༄ ・・・・・・・・・・</p> 
 
 <p align="center">
-Download the app from <a href="https://github.com/alptugan/icns-creator/releases/latest">Releases</a><br>(Requires minimum Mac OS 11.0 - 14.2)
+Download the app from <a href="https://github.com/alptugan/icns-creator/releases/latest">Releases</a><br>(Requires minimum Mac OS 11.0 - 14.6.1).<br><span style="color:#ffcc00">PLEASE FOLLOW "Installation" instructions.</span>
 </p>
 
 <img src="assets/icns_creator_v3_cover.jpg" alt="Image shows the three different screen shots of the main app window." width="100%" height="auto" style="border-radius:15px;">
@@ -33,8 +33,9 @@ The UI is a lot different with the v1. The following video is still appropriate.
 
 To use icns Creator, follow these steps:
 
-1.  Download the latest release from the [Releases](https://github.com/alptugan/icns-creator/releases) page. If you want to edit the source code, clone the repository to your local machine & open it with XCode.  
-2. Open the icns Creator application file (`icns-creator.app`).
+1. Download the latest release from the [Releases](https://github.com/alptugan/icns-creator/releases) page. 
+2. Since the app is not signed by Apple, your OS does not open the app.You must enable System Settings->Privacy & Security->Security->App Store and identified developers option. Depending on your configuration, you need to disable "Gate keeper" option to install unsigned apps. You can have more information [link](https://www.macworld.com/article/672947/how-to-open-a-mac-app-from-an-unidentified-developer.html)
+3. Unzip the file. DO NOT DOUBLE CLICK. Right-click on icns Creator application file (`icns-creator.app`) to run it.
 3. If prompted, allow the application to run on your system.
 4. You're ready to start creating icns files out of PNG, JPG, or any other image document!
 
