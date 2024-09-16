@@ -89,11 +89,12 @@ _________________________________________________
 - [x] ~~Delete PNG file after creation of the individual .icns files~~
 - [x] ~~Ask for destination to save files...~~
 - [x] ~~Better UI to show switch toggle options~~
+- [x] ~~Release major v3~~
 - [ ] Set options for rounded corners: None, Rounded, Circular
 - [ ] Add preview for changed options
 - [ ] Update YouTube video tutotial.
-- [ ] Drag & drop folders or apps to edit their icns props on the fly for better UX. Set the icons using the app. 
-- [ ] Release major v3.
+- [ ] v4
+    - [ ] Drag & drop folders or apps to edit their icns props on the fly for better UX. Set the icons using the app.
 - [ ] Distrubute image conversion process into different CPU threads. It is a possible fix to avoid locking main thread during the icns creation process.
 - [ ] Distrubute through Homebrew.
 - [ ] Apple Codesign issues! (Optional: Will be exist forever) 
