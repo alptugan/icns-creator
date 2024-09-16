@@ -38,7 +38,11 @@ extension NSOpenPanel {
 
 func selectFileFromSystem(g: GlobalVariables) {
     let openPanel = NSOpenPanel()
-    openPanel.allowedFileTypes = ["png", "jpg", "jpeg"] // Specify allowed file types
+    if #available(macOS 12.0, *) {
+        openPanel.allowedContentTypes = [.image]
+    }else{
+        openPanel.allowedFileTypes = ["jpg", "jpeg", "png", "gif"]
+    }
     openPanel.canChooseFiles = true
     openPanel.canChooseDirectories = false
 
@@ -431,27 +435,53 @@ struct ContentView: View {
         // NAVIGATION MENU
         // If image is selected then show the tabs
         if g.selectedImage != nil {
-            VStack() {
-                Picker("", selection: $selectedTab) {
-                    Text(".iconset").tag(0)
-                    Text(".icns").tag(1)
+            if #available(macOS 14.0, *) {
+                VStack() {
+                    Picker("", selection: $selectedTab) {
+                        Text(".iconset").tag(0)
+                        Text(".icns").tag(1)
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .frame(height: 10)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .accentColor(.blue)
+                    .onChange(of: selectedTab) { oldValue, newValue in
+                        // window size
+                        let newHeight: CGFloat = newValue == 0 ? 520 : 570
+                        resizeWindow(g: g, to: CGSize(width: g.win.size.width, height: newHeight))
+                        NSApplication.shared.activate(ignoringOtherApps: true)
+                        
+                    }
+                    .onAppear {
+                        resizeWindow(g: g, to: CGSize(width: g.win.size.width, height: 520))
+                        NSApplication.shared.activate(ignoringOtherApps: true)
+                        
+                    }
                 }
-                .pickerStyle(SegmentedPickerStyle())
-                .frame(height: 10)
-                .padding()
-                .frame(maxWidth: .infinity)
-                .accentColor(.blue)
-                .onChange(of: selectedTab) { newValue in
-                    // window size
-                    let newHeight: CGFloat = newValue == 0 ? 520 : 570
-                    resizeWindow(g: g, to: CGSize(width: g.win.size.width, height: newHeight))
-                    NSApplication.shared.activate(ignoringOtherApps: true)
-
-                }
-                .onAppear {
-                    resizeWindow(g: g, to: CGSize(width: g.win.size.width, height: 520))
-                    NSApplication.shared.activate(ignoringOtherApps: true)
-
+            }else{
+                VStack() {
+                    Picker("", selection: $selectedTab) {
+                        Text(".iconset").tag(0)
+                        Text(".icns").tag(1)
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .frame(height: 10)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .accentColor(.blue)
+                    .onChange(of: selectedTab) { newValue in
+                        // window size
+                        let newHeight: CGFloat = newValue == 0 ? 520 : 570
+                        resizeWindow(g: g, to: CGSize(width: g.win.size.width, height: newHeight))
+                        NSApplication.shared.activate(ignoringOtherApps: true)
+                        
+                    }
+                    .onAppear {
+                        resizeWindow(g: g, to: CGSize(width: g.win.size.width, height: 520))
+                        NSApplication.shared.activate(ignoringOtherApps: true)
+                        
+                    }
                 }
             }
         }
@@ -731,19 +761,35 @@ struct GenerateView_ICNS: View {
             if g.selectedImage != nil {
                 Spacer()
                 HStack {
-                    Toggle("All", isOn: $g.isToggled_All)
-                        .onChange(of: g.isToggled_All) {
-                            newValue in
-                            //if newValue {
-                            g.isToggled_16 = newValue
-                            g.isToggled_32 = newValue
-                            g.isToggled_64 = newValue
-                            g.isToggled_128 = newValue
-                            g.isToggled_256 = newValue
-                            g.isToggled_512 = newValue
-                            g.isToggled_1024 = newValue
-                            //}
-                        }
+                    if #available(macOS 14.0, *) {
+                        Toggle("All", isOn: $g.isToggled_All)
+                            .onChange(of: g.isToggled_All) {
+                                oldvalue, newValue in
+                                //if newValue {
+                                g.isToggled_16 = newValue
+                                g.isToggled_32 = newValue
+                                g.isToggled_64 = newValue
+                                g.isToggled_128 = newValue
+                                g.isToggled_256 = newValue
+                                g.isToggled_512 = newValue
+                                g.isToggled_1024 = newValue
+                                //}
+                            }
+                    }else{
+                        Toggle("All", isOn: $g.isToggled_All)
+                            .onChange(of: g.isToggled_All) {
+                                newValue in
+                                //if newValue {
+                                g.isToggled_16 = newValue
+                                g.isToggled_32 = newValue
+                                g.isToggled_64 = newValue
+                                g.isToggled_128 = newValue
+                                g.isToggled_256 = newValue
+                                g.isToggled_512 = newValue
+                                g.isToggled_1024 = newValue
+                                //}
+                            }
+                    }
                     Toggle("16x16", isOn: $g.isToggled_16)
                     Toggle("32x32", isOn: $g.isToggled_32)
                     Toggle("64x64", isOn: $g.isToggled_64)

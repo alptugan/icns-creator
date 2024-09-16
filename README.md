@@ -87,8 +87,8 @@ _________________________________________________
 - [x] ~~Add feature to export icons with shadow option.~~ 
 - [x] ~~Set original icon~~
 - [x] ~~Delete PNG file after creation of the individual .icns files~~
-- [ ] Ask for destination to save files...
-- [x] Better UI to show switch toggle options
+- [x] ~~Ask for destination to save files...~~
+- [x] ~~Better UI to show switch toggle options~~
 - [ ] Set options for rounded corners: None, Rounded, Circular
 - [ ] Add preview for changed options
 - [ ] Update YouTube video tutotial.
