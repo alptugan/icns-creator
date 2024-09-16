@@ -93,6 +93,8 @@ _________________________________________________
 - [ ] Set options for rounded corners: None, Rounded, Circular
 - [ ] Add preview for changed options
 - [ ] Update YouTube video tutotial.
+- [ ] Improve documentation on compiling the project.
+- [ ] Check the latest release on a Intel-based Mac (Rosetta Architecture may help to fix issues for Intel chip).
 - [ ] v4
     - [ ] Drag & drop folders or apps to edit their icns props on the fly for better UX. Set the icons using the app.
 - [ ] Distrubute image conversion process into different CPU threads. It is a possible fix to avoid locking main thread during the icns creation process.
