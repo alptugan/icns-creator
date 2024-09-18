@@ -23,11 +23,11 @@ The UI is a lot different with the v1. The following video is still appropriate.
 
 ## Features
 
-- Simple and intuitive user interface
-- Support for PNG and JPG image formats
-- Automatic generation of icns files in variable sizes
-- iconset folder and individual .icns file generation
-- Options to set icon style for Apple design standarts
+- Simple and intuitive user interface.
+- Support for GIF, PNG and JPG image formats.
+- Automatic generation of icns files in variable sizes.
+- iconset folder and individual .icns file generation.
+- Options to set icon style for Apple design standarts (subtle shadow, corner radius, icon margin area).
 
 ## Installation
 
@@ -38,6 +38,30 @@ To use icns Creator, follow these steps:
 3. Unzip the file. DO NOT DOUBLE CLICK. Right-click on icns Creator application file (`icns-creator.app`) to run it.
 3. If prompted, allow the application to run on your system.
 4. You're ready to start creating icns files out of PNG, JPG, or any other image document!
+
+
+To build the app by yourself or make modifications on the source code (Optional)
+
+1. Install XCode application from Appstore.
+2. Download or clone the repository.
+<p style="margin-bottom:20px" align="center">
+    <img src="./assets/icns_dev_tut1.jpeg" width="80%">
+</p>
+
+3. Unzip the folder and Double-click `icns creator.xcodeproj` file to open it in XCode.
+<p style="margin-bottom:20px" align="center">
+    <img src="./assets/icns_dev_tut2.jpeg" width="80%">
+</p>
+
+4. Hit `Run` button to compile the project.
+<p style="margin-bottom:20px" align="center">
+    <img src="./assets/icns_dev_tut3.jpeg" width="80%">
+</p>
+
+5. If everything goes well hopefully, you can find the app under the XCode's Product menu.
+<p style="margin-bottom:20px" align="center">
+    <img src="./assets/icns_dev_tut4.png" width="80%">
+</p>
 
 ## Usage for Designers & Developers
 
@@ -96,7 +120,10 @@ _________________________________________________
 - [ ] Improve documentation on compiling the project.
 - [ ] Check the latest release on a Intel-based Mac (Rosetta Architecture may help to fix issues for Intel chip).
 - [ ] v4
-    - [ ] Drag & drop folders or apps to edit their icns props on the fly for better UX. Set the icons using the app.
+    - [ ] Drag & drop folders or apps to edit their icns props on the fly for better UX. 
+    - [ ] Set the icons using the app.
+    - [ ] Return to original icon option.
+    - [ ] Keep the original icon in the original app directory.
 - [ ] Distrubute image conversion process into different CPU threads. It is a possible fix to avoid locking main thread during the icns creation process.
 - [ ] Distrubute through Homebrew.
 - [ ] Apple Codesign issues! (Optional: Will be exist forever) 
