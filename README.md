@@ -114,11 +114,11 @@ _________________________________________________
 - [x] ~~Ask for destination to save files...~~
 - [x] ~~Better UI to show switch toggle options~~
 - [x] ~~Release major v3~~
+- [x] ~~Improve documentation on compiling the project.~~
+- [x] ~~Check the latest release on a Intel-based Mac (Rosetta Architecture may help to fix issues for Intel chip).~~
 - [ ] Set options for rounded corners: None, Rounded, Circular
 - [ ] Add preview for changed options
 - [ ] Update YouTube video tutotial.
-- [ ] Improve documentation on compiling the project.
-- [ ] Check the latest release on a Intel-based Mac (Rosetta Architecture may help to fix issues for Intel chip).
 - [ ] v4
     - [ ] Drag & drop folders or apps to edit their icns props on the fly for better UX. 
     - [ ] Set the icons using the app.
