@@ -116,8 +116,9 @@ _________________________________________________
 - [x] ~~Release major v3~~
 - [x] ~~Improve documentation on compiling the project.~~
 - [x] ~~Check the latest release on a Intel-based Mac (Rosetta Architecture may help to fix issues for Intel chip).~~
+- [x] ~~Add preview for changed options~~
+- [x] ~~Destination path dialog~~
 - [ ] Set options for rounded corners: None, Rounded, Circular
-- [ ] Add preview for changed options
 - [ ] Update YouTube video tutotial.
 - [ ] v4
     - [ ] Drag & drop folders or apps to edit their icns props on the fly for better UX. 

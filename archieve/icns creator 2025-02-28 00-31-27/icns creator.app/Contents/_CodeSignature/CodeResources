@@ -10,11 +10,20 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		q0Z0Jv1VGFf++XDxQDqJloupZWo=
+		KxC2PiqKjfPtsLnd4yXKWuGXNrM=
 		</data>
 	</dict>
 	<key>files2</key>
 	<dict>
+		<key>Frameworks/libswift_Concurrency.dylib</key>
+		<dict>
+			<key>cdhash</key>
+			<data>
+			1iqKc8sV13tqswHPrafU4jv6wWw=
+			</data>
+			<key>requirement</key>
+			<string>identifier "com.apple.dt.runtime.swiftConcurrency" and anchor apple generic and certificate leaf[subject.CN] = "Apple Development: alptugan@gmail.com (MWRQ5HMS8L)" and certificate 1[field.1.2.840.113635.100.6.2.1] /* exists */</string>
+		</dict>
 		<key>Resources/AppIcon.icns</key>
 		<dict>
 			<key>hash2</key>
@@ -26,7 +35,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			O4x9wToqf7WCHxw5VGYHYHhdPda/nUvYrW4JnqVT808=
+			vC41SIgwn+vEW2E6/9lcBT93A5Imqzr+CNWWTz9drqY=
 			</data>
 		</dict>
 	</dict>

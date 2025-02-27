@@ -44,6 +44,7 @@ func selectFileFromSystem(g: GlobalVariables) {
         openPanel.allowedFileTypes = ["jpg", "jpeg", "png", "gif"]
     }
     openPanel.canChooseFiles = true
+    openPanel.allowsMultipleSelection = false
     openPanel.canChooseDirectories = false
 
     openPanel.begin { result in
@@ -69,12 +70,14 @@ func runShellCommand(g: GlobalVariables) {
     }
     
     let escapedImagePath = imagePath.replacingOccurrences(of: " ", with: "\\ ")
-    let escapedImageName = imagePath.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
     
-    
-    let escapedIconPath = "\(escapedImageName).iconset"
+
+    //let escapedIconPath = "\(escapedImageName).iconset"
+    let escapedIconPath = g.destinationPath + "/" + g.selectedImageName + ".iconset"
     let fileManager = FileManager.default
     
+
+
     // Check and create directory
     var isDirectory: ObjCBool = false
     if !fileManager.fileExists(atPath: escapedIconPath, isDirectory: &isDirectory) {
@@ -256,8 +259,10 @@ func runShellCommand2(res: Int, g: GlobalVariables) {
     var escapedImagePath = g.imagePath!.replacingOccurrences(of: " ", with: "\\ ")
     
     // file path without extension
-    var escapedImagePath2 = g.imagePath!.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
+    //var escapedImagePath2 = g.imagePath!.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
     
+    var escapedImagePath2 = g.destinationPath + "/" + g.selectedImageName + ".iconset"
+
     
     guard let roundedImage = createRoundedImage(from: escapedImagePath, size: res, _isRoundCornersEnabled: g.enableRoundedCorners, _enableShadow: g.enableIconShadow, _enablePadding: g.enablePadding) else { return }
 
@@ -270,6 +275,8 @@ func runShellCommand2(res: Int, g: GlobalVariables) {
     
     escapedImagePath = outputPath.replacingOccurrences(of: " ", with: "\\ ")
     escapedImagePath2 = outputPath.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
+    
+    
     
     
     do {
@@ -335,9 +342,10 @@ func runShellCommand2(res: Int, g: GlobalVariables) {
 func generateCombinedIcns(g: GlobalVariables) {
     let process = Process()
     
-    let escapedImageName = g.imagePath!.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
+    //let escapedImageName = g.imagePath!.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
     
-    let escapedIconPath = escapedImageName + ".iconset"
+    //let escapedIconPath = escapedImageName + ".iconset"
+    let escapedIconPath = g.destinationPath + "/" + g.selectedImageName + ".iconset"
     
    /* let fileManager = FileManager.default
     if fileManager.fileExists(atPath: escapedIconPath) {
@@ -371,58 +379,6 @@ func generateCombinedIcns(g: GlobalVariables) {
     
     process.waitUntilExit()
 }
-
-/*func generateCombinedIcns(g: GlobalVariables) {
-    // Create an instance of NSOpenPanel
-    let openPanel = NSOpenPanel()
-    openPanel.canChooseDirectories = true
-    openPanel.canChooseFiles = false
-    openPanel.allowsMultipleSelection = false
-    
-    // Show the panel and handle the user's selection
-    openPanel.begin { response in
-        if response == .OK, let selectedDirectory = openPanel.url {
-            let process = Process()
-            
-            // Escape the image name and construct the iconset path
-            let escapedImageName = g.imagePath!.replacingOccurrences(of: "\\.\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
-            let escapedIconPath = selectedDirectory.appendingPathComponent("\(escapedImageName).iconset").path
-            
-            // Create the iconset directory if it does not exist
-            let fileManager = FileManager.default
-            if !fileManager.fileExists(atPath: escapedIconPath) {
-                do {
-                    try fileManager.createDirectory(atPath: escapedIconPath, withIntermediateDirectories: true, attributes: nil)
-                    print("Created iconset directory at \(escapedIconPath)")
-                } catch {
-                    print("Failed to create directory: \(error.localizedDescription)")
-                    return
-                }
-            } else {
-                print("Iconset directory already exists at \(escapedIconPath)")
-            }
-            
-            // Prepare and execute the command to create the ICNS file
-            let command = "iconutil -c icns \(escapedIconPath)"
-            
-            process.launchPath = "/bin/bash"
-            process.arguments = ["-c", command]
-            
-            let outputPipe = Pipe()
-            process.standardOutput = outputPipe
-            
-            process.launch()
-            
-            let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-            if let output = String(data: outputData, encoding: .utf8) {
-                g.outputText = output
-            }
-            
-            process.waitUntilExit()
-        }
-    }
-}*/
-
 
 // MAIN CONTENT VIEW TABS
 struct ContentView: View {
@@ -538,20 +494,22 @@ struct CommonView: View {
                                 
                                 VStack {
                                     //Spacer()
-                                    // If the image is selected
+                                    // If the image is selected - Preview of the image
                                     if g.selectedImage != nil {
                                         GeometryReader { geo in
                                             let localFrame = geo.frame(in: .local)
+                                            let ww = g.enablePadding ? g.imgW - 20 : g.imgW
+                                            let hh = g.enablePadding ? g.imgH - 20 : g.imgH
                                             VStack {
                                                 ZStack {
                                                     RoundedRectangle(cornerRadius: 27.1)
-                                                        .frame(width: g.imgW , height: g.imgH)
-                                                        .shadow(radius: 10)
+                                                        .frame(width: ww , height: hh)
+                                                        .shadow(radius: g.enableIconShadow ? 10 : 0)
                                                     
                                                     Image(nsImage: g.selectedImage!)
                                                         .resizable()
-                                                        .frame(width: g.imgW, height: g.imgH)
-                                                        .cornerRadius(27.1)
+                                                        .frame(width: ww , height: hh)
+                                                        .cornerRadius(g.enableRoundedCorners ? 27.1 : 0)
                                                 }.position(x:localFrame.midX, y: localFrame.maxY)
                                                 
                                             }
@@ -687,7 +645,6 @@ struct CommonView: View {
                                 DispatchQueue.main.async {
                                     g.imagePath = url.path
                                     g.selectedImageName = url.deletingPathExtension().lastPathComponent
-
                                     if let image = NSImage(contentsOf: url) {
                                         g.selectedImage = image
                                     }
@@ -712,30 +669,22 @@ struct GenerateView_ICONSET: View {
     @EnvironmentObject var g: GlobalVariables // Access the global variables
 
     var body: some View {
-        // After the image is display in the container show Convert <Button>
+        // After the image is displayed in the container, show the Convert <Button>
         if g.selectedImage != nil {
             VStack {
                 Spacer(minLength: 185)
                 HStack {
                     Button("Generate .iconset") {
-                        let openPanel = NSOpenPanel()
-                        openPanel.canChooseDirectories = true
-                        openPanel.canChooseFiles = false
-                        openPanel.allowsMultipleSelection = false
-                        
+                        let openPanel = createOpenPanel(defaultDirectory: URL(fileURLWithPath: NSHomeDirectory()))
+
                         // Show the panel and handle the user's selection
                         openPanel.begin { response in
                             if response == .OK, let selectedDirectory = openPanel.url {
                                 g.destinationPath = selectedDirectory.path
-                                /*
-                                print(selectedDirectory.absoluteString) // output: file:///Users/alptugan/Desktop/
-                                print(selectedDirectory.lastPathComponent) // output: Desktop
-                                print(selectedDirectory.absoluteURL) // output: file:///Users/alptugan/Desktop/
-                                 */
-                                print("Destination Path:", selectedDirectory.path) // output: /Users/alptugan/Desktop
                                 
-                                runShellCommand(g:g)
-                                generateCombinedIcns(g:g)
+                                // Generate images
+                                runShellCommand(g: g)
+                                generateCombinedIcns(g: g)
                             }
                         }
                     }
@@ -746,7 +695,6 @@ struct GenerateView_ICONSET: View {
         }
     }
 }
-
 
 
 struct GenerateView_ICNS: View {
@@ -804,33 +752,44 @@ struct GenerateView_ICNS: View {
 
                 HStack {
                     Button("Generate .icns") {
-                        if(g.isToggled_16 == true) {
-                            runShellCommand2(res:16,g:g)
+                        let openPanel = createOpenPanel(defaultDirectory: URL(fileURLWithPath: NSHomeDirectory()))
+                        
+                        // Show the panel and handle the user's selection
+                        openPanel.begin { response in
+                            if response == .OK, let selectedDirectory = openPanel.url {
+                                g.destinationPath = selectedDirectory.path
+                                
+                                if(g.isToggled_16 == true) {
+                                    runShellCommand2(res:16,g:g)
+                                }
+                                
+                                if(g.isToggled_32 == true) {
+                                    runShellCommand2(res:32, g:g)
+                                }
+                                
+                                if(g.isToggled_64 == true) {
+                                    runShellCommand2(res:64, g:g)
+                                }
+                                
+                                if(g.isToggled_128 == true) {
+                                    runShellCommand2(res:128, g:g)
+                                }
+                                
+                                if(g.isToggled_256 == true) {
+                                    runShellCommand2(res:256, g:g)
+                                }
+                                
+                                if(g.isToggled_512 == true) {
+                                    runShellCommand2(res:512, g:g)
+                                }
+                                
+                                if(g.isToggled_1024 == true) {
+                                    runShellCommand2(res:1024, g:g)
+                                }
+                            }
                         }
                         
-                        if(g.isToggled_32 == true) {
-                            runShellCommand2(res:32, g:g)
-                        }
                         
-                        if(g.isToggled_64 == true) {
-                            runShellCommand2(res:64, g:g)
-                        }
-                        
-                        if(g.isToggled_128 == true) {
-                            runShellCommand2(res:128, g:g)
-                        }
-                        
-                        if(g.isToggled_256 == true) {
-                            runShellCommand2(res:256, g:g)
-                        }
-                        
-                        if(g.isToggled_512 == true) {
-                            runShellCommand2(res:512, g:g)
-                        }
-                        
-                        if(g.isToggled_1024 == true) {
-                            runShellCommand2(res:1024, g:g)
-                        }
                     }
                     .disabled(allTogglesOff)
                 } // Button
@@ -840,6 +799,23 @@ struct GenerateView_ICNS: View {
         .frame(maxHeight: .infinity) // Ensure VStack takes full height
 
     }
+}
+
+// File location choose dialog
+func createOpenPanel(defaultDirectory: URL? = nil) -> NSOpenPanel {
+    let openPanel = NSOpenPanel()
+    openPanel.canChooseFiles = false
+    openPanel.canChooseDirectories = true
+    openPanel.allowsMultipleSelection = false
+    openPanel.title = "Choose Destination" // Title of the dialog
+    openPanel.message = "Select a folder to save the .iconset" // Message displayed in the dialog
+    openPanel.prompt = "Choose" // Label for the confirmation button
+    
+    if let defaultDirectory = defaultDirectory {
+        openPanel.directoryURL = defaultDirectory // Set default directory
+    }
+    
+    return openPanel
 }
 
 struct ContentView_Previews: PreviewProvider {
