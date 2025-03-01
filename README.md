@@ -121,13 +121,13 @@ _________________________________________________
 - [x] ~~Check the latest release on a Intel-based Mac (Rosetta Architecture may help to fix issues for Intel chip).~~
 - [x] ~~Add preview for changed options~~
 - [x] ~~Destination path dialog~~
-- [ ] Set options for rounded corners: None, Rounded, Circular
-- [ ] Update YouTube video tutotial.
+- [ ] ‼️ Set options for rounded corners: None, Rounded, Circular
+- [ ] ‼️ Update YouTube video tutotial.
 - [ ] v4
     - [ ] Drag & drop folders or apps to edit their icns props on the fly for better UX. 
     - [ ] Set the icons using the app.
     - [ ] Return to original icon option.
     - [ ] Keep the original icon in the original app directory.
-- [ ] Distrubute image conversion process into different CPU threads. It is a possible fix to avoid locking main thread during the icns creation process.
-- [ ] Distrubute through Homebrew.
-- [ ] Apple Codesign issues! (Optional: Will be exist forever) 
+- [ ] Optional: Distrubute image conversion process into different CPU threads. It is a possible fix to avoid locking main thread during the icns creation process.
+- [ ] Optional: Distrubute through Homebrew or any other package manager.
+- [ ] Optional: Apple Codesign issues! (Will exist forever because of Apple's buggy developer registration process) 
