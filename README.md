@@ -85,6 +85,9 @@ Contributions to icns Creator are welcome! If you would like to contribute to th
 4. Push your changes to your forked repository.
 5. Open a pull request in the main repository, explaining your changes and their benefits.
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=alptugan/icns-creator&type=Date)](https://star-history.com/#alptugan/icns-creator&Date)
 
 ## License
 
