@@ -5,7 +5,7 @@
 <p align="center">・・・・・・・・・・ ༄ ・・・・・・・・・・</p> 
 
 <p align="center">
-Download the app from <a href="https://github.com/alptugan/icns-creator/releases/latest">Releases</a><br>(Requires minimum Mac OS 11.0 - 14.6.1).<br><span style="color:#ffcc00">PLEASE FOLLOW "Installation" instructions.</span>
+Download the app from <a href="https://github.com/alptugan/icns-creator/releases/latest">Releases</a><br>(Requires minimum Mac OS 11.0 - 15.3.1).<br><span style="color:#ffcc00">PLEASE FOLLOW "Installation" instructions.</span>
 </p>
 
 <img src="assets/icns_creator_v3_cover.jpg" alt="Image shows the three different screen shots of the main app window." width="100%" height="auto" style="border-radius:15px;">
@@ -31,6 +31,7 @@ The UI is a lot different with the v1. The following video is still appropriate.
 
 ## Installation
 
+### Option 1 (Recommended for non-developers)
 To use icns Creator, follow these steps:
 
 1. Download the latest release from the [Releases](https://github.com/alptugan/icns-creator/releases) page. 
@@ -40,7 +41,8 @@ To use icns Creator, follow these steps:
 4. You're ready to start creating icns files out of PNG, JPG, or any other image document!
 
 
-To build the app by yourself or make modifications on the source code (Optional)
+### Option 2 (For developers)
+To build the app by yourself or make modifications on the source code (Optional). If you have issues because of Apple's security issues, or you do not prefer to install compiled apps, you can compile the app by yourself and review the code as well.
 
 1. Install XCode application from Appstore.
 2. Download or clone the repository.
