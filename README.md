@@ -125,6 +125,8 @@ _________________________________________________
 - [x] ~~Destination path dialog~~
 - [ ] ‼️ Set options for rounded corners: None, Rounded, Circular
 - [ ] ‼️ Update YouTube video tutotial.
+- [ ] ‼️ File name issue. When there is blank space in filename, the process fails. `code solid.svg` - failed. `code-solid.svg` - success.
+- [ ] Optional: A workaround for testing, and permissions. Test the app on a fresh Mac.
 - [ ] v4
     - [ ] Drag & drop folders or apps to edit their icns props on the fly for better UX. 
     - [ ] Set the icons using the app.
