@@ -24,7 +24,7 @@ The UI is a lot different with the v1. The following video is still appropriate.
 ## Features
 
 - Simple and intuitive user interface.
-- Support for GIF, PNG and JPG image formats.
+- Support for GIF, PNG, JPG, JPEG, TIFF and even PSD image file formats.
 - Automatic generation of icns files in variable sizes.
 - iconset folder and individual .icns file generation.
 - Options to set icon style for Apple design standarts (subtle shadow, corner radius, icon margin area).
@@ -123,15 +123,15 @@ _________________________________________________
 - [x] ~~Check the latest release on a Intel-based Mac (Rosetta Architecture may help to fix issues for Intel chip).~~
 - [x] ~~Add preview for changed options~~
 - [x] ~~Destination path dialog~~
+- [x] ~~File name issue. When there is blank space in filename, the process fails. `code solid.svg` - failed. `code-solid.svg` - success.~~
 - [ ] ‼️ Set options for rounded corners: None, Rounded, Circular
 - [ ] ‼️ Update YouTube video tutotial.
-- [ ] ‼️ File name issue. When there is blank space in filename, the process fails. `code solid.svg` - failed. `code-solid.svg` - success.
-- [ ] Optional: A workaround for testing, and permissions. Test the app on a fresh Mac.
 - [ ] v4
     - [ ] Drag & drop folders or apps to edit their icns props on the fly for better UX. 
     - [ ] Set the icons using the app.
     - [ ] Return to original icon option.
     - [ ] Keep the original icon in the original app directory.
+- [ ] Optional: A workaround for testing, and permissions. Test the app on a fresh Mac.
 - [ ] Optional: Distrubute image conversion process into different CPU threads. It is a possible fix to avoid locking main thread during the icns creation process.
 - [ ] Optional: Distrubute through Homebrew or any other package manager.
 - [ ] Optional: Apple Codesign issues! (Will exist forever because of Apple's buggy developer registration process) 

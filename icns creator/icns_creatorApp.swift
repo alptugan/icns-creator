@@ -3,10 +3,14 @@
 //  icns creator
 //
 //  Created by alp tugan on 10.08.2023.
-//  Update: v2.2 on 04.09.2024
+//  Update: v2.2 on 07.09.2024
 //  Update: v2.4 on 08.09.2024
-//  Update: v3.4 on 09.09.2024
+//  Update: v3.4 on 09.09.2024 -scaleFactor warnings cleared, Thread optimization (waiting)
 //  Update: v3.5 on 14.09.2024 -ask for destination path: destinationPath,selectedImageName
+//  Update: v3.6.1 on 19.03.2025 -fix blank spaced input issue
+//  Update: v3.6.2 on 11.04.2025 - generateCombinedIcns() replaced with safer version
+//                               - Rounded corner preview fixed
+//                               - runShellCommand2() updated. Image generation might be problematic
 
 
 import SwiftUI

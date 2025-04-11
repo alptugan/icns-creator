@@ -3,11 +3,6 @@
 //  icns creator
 //
 //  Created by alp tugan on 10.08.2023.
-//
-//  Update: v2.2 on 07.09.2024
-//  Update: v3.4 on 09.09.2024 -scaleFactor warnings cleared, Thread optimization (waiting)
-//  Update: v3.5 on 14.09.2024 -ask for destination path: destinationPath,selectedImageName
-
 import SwiftUI
 import Foundation
 import Cocoa
@@ -23,7 +18,7 @@ extension NSOpenPanel {
         if #available(macOS 12.0, *) {
             panel.allowedContentTypes = [.image]
         }else{
-            panel.allowedFileTypes = ["jpg", "jpeg", "png", "gif"]
+            panel.allowedFileTypes = ["jpg", "jpeg", "png", "gif", "psd"]
         }
         panel.begin { result in
             if result == .OK, let url = panel.urls.first, let image = NSImage(contentsOf: url) {
@@ -41,7 +36,7 @@ func selectFileFromSystem(g: GlobalVariables) {
     if #available(macOS 12.0, *) {
         openPanel.allowedContentTypes = [.image]
     }else{
-        openPanel.allowedFileTypes = ["jpg", "jpeg", "png", "gif"]
+        openPanel.allowedFileTypes = ["jpg", "jpeg", "png", "gif", "psd"]
     }
     openPanel.canChooseFiles = true
     openPanel.allowsMultipleSelection = false
@@ -61,33 +56,37 @@ func selectFileFromSystem(g: GlobalVariables) {
 }
 
 //-------------------------------------------------------------------------------------------------
-// PART 1: GENERATE ICNS
+// PART 1: GENERATE ICONSET
 //-------------------------------------------------------------------------------------------------
 func runShellCommand(g: GlobalVariables) {
     guard let imagePath = g.imagePath else {
         print("imagePath is nil.")
         return
     }
-    
-    let escapedImagePath = imagePath.replacingOccurrences(of: " ", with: "\\ ")
-    
 
-    //let escapedIconPath = "\(escapedImageName).iconset"
-    let escapedIconPath = g.destinationPath + "/" + g.selectedImageName + ".iconset"
+    let escapedImagePath = imagePath // Use the original path directly
+    //print("Image Path: \(escapedImagePath)")
+
+    // Construct the icon path using URL
+    let iconSetName = "\(g.selectedImageName).iconset"
+    let escapedIconPath = URL(fileURLWithPath: g.destinationPath).appendingPathComponent(iconSetName).path
     let fileManager = FileManager.default
-    
-
 
     // Check and create directory
     var isDirectory: ObjCBool = false
     if !fileManager.fileExists(atPath: escapedIconPath, isDirectory: &isDirectory) {
         print("The directory does not exist. Creating...")
-        try? fileManager.createDirectory(atPath: escapedIconPath, withIntermediateDirectories: true, attributes: nil)
+        do {
+            try fileManager.createDirectory(atPath: escapedIconPath, withIntermediateDirectories: true, attributes: nil)
+        } catch {
+            print("Failed to create directory: \(error)")
+            return
+        }
     } else if !isDirectory.boolValue {
         print("A file exists at the specified path, not a directory.")
         return
     }
-    
+
     let sizes: [Int] = [16, 32, 128, 256, 512]
 
     for size in sizes {
@@ -173,8 +172,6 @@ func createRoundedImage(from path: String, size: Int, _isRoundCornersEnabled: Bo
     
     // Create a new NSImage with the original size
     let finalImage = NSImage(size: NSSize(width: size, height: size))
-
-    // Calculate radius for rounded corners
     
     // Calculate radius for rounded corners
     var radiusVal:Double = 0
@@ -256,16 +253,12 @@ func runShellCommand2(res: Int, g: GlobalVariables) {
 
     let process = Process()
     // file path with extension
-    var escapedImagePath = g.imagePath!.replacingOccurrences(of: " ", with: "\\ ")
-    
-    // file path without extension
-    //var escapedImagePath2 = g.imagePath!.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
-    
-    var escapedImagePath2 = g.destinationPath + "/" + g.selectedImageName + ".iconset"
-
+    //var escapedImagePath = g.imagePath!.replacingOccurrences(of: " ", with: "\\ ")
+    var escapedImagePath:String = g.imagePath!
+    var escapedImagePath2 = g.destinationPath + "/" + g.selectedImageName
     
     guard let roundedImage = createRoundedImage(from: escapedImagePath, size: res, _isRoundCornersEnabled: g.enableRoundedCorners, _enableShadow: g.enableIconShadow, _enablePadding: g.enablePadding) else { return }
-
+    
     guard let tiffData = roundedImage.tiffRepresentation,
           let bitmapRep = NSBitmapImageRep(data: tiffData),
           let pngData = bitmapRep.representation(using: .png, properties: [:]) else { return }
@@ -275,8 +268,6 @@ func runShellCommand2(res: Int, g: GlobalVariables) {
     
     escapedImagePath = outputPath.replacingOccurrences(of: " ", with: "\\ ")
     escapedImagePath2 = outputPath.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
-    
-    
     
     
     do {
@@ -340,44 +331,63 @@ func runShellCommand2(res: Int, g: GlobalVariables) {
 
 // GENERATE .ICONSET File
 func generateCombinedIcns(g: GlobalVariables) {
-    let process = Process()
-    
-    //let escapedImageName = g.imagePath!.replacingOccurrences(of: ".\\w+$", with: "", options: .regularExpression).replacingOccurrences(of: " ", with: "\\ ")
-    
-    //let escapedIconPath = escapedImageName + ".iconset"
-    let escapedIconPath = g.destinationPath + "/" + g.selectedImageName + ".iconset"
-    
-   /* let fileManager = FileManager.default
-    if fileManager.fileExists(atPath: escapedIconPath) {
-        print("File exists iconset")
-    } else {
-        print("File does not exist iconset")
-        let mkdirProcess = Process()
-        mkdirProcess.launchPath = "/bin/bash"
-        mkdirProcess.arguments = ["-c", "mkdir " + escapedIconPath]
-        mkdirProcess.launch()
-    }*/
-    let mkdirProcess = Process()
-    mkdirProcess.launchPath = "/bin/bash"
-    mkdirProcess.arguments = ["-c", "mkdir " + escapedIconPath]
-    mkdirProcess.launch()
-    
-    let command = "iconutil -c icns \(escapedIconPath)"
-    
-    process.launchPath = "/bin/bash"
-    process.arguments = ["-c", command]
-    
-    let outputPipe = Pipe()
-    process.standardOutput = outputPipe
-    
-    process.launch()
-    
-    let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-    if let output = String(data: outputData, encoding: .utf8) {
-        g.outputText = output
+
+    // --- Uses the DYNAMIC g.selectedImageName ---
+    let iconSetName = "\(g.selectedImageName).iconset"
+    //let escapedIconPath = URL(fileURLWithPath: g.destinationPath).appendingPathComponent(iconSetName).path
+    let outputIcnsPath = URL(fileURLWithPath: g.destinationPath).appendingPathComponent("\(g.selectedImageName).icns").path
+
+    // --- Uses the DYNAMIC g.destinationPath ---
+    // Creates a URL from the string path provided by the user
+    let destinationURL = URL(fileURLWithPath: g.destinationPath) // Use fileURLWithPath
+
+    // --- Combines the dynamic destination and dynamic icon name ---
+    let iconSetURL = destinationURL.appendingPathComponent(iconSetName)
+    let iconSetPath = iconSetURL.path // Path string derived from dynamic values
+
+    // --- Uses the derived path (from dynamic values) for directory creation ---
+    print("Attempting to create/use iconSetPath:", iconSetPath)
+    do {
+        try FileManager.default.createDirectory(at: iconSetURL, withIntermediateDirectories: true, attributes: nil)
+        print("Successfully created directory (or it already existed): \(iconSetPath)")
+
+        // --- Uses the derived path (from dynamic values) for iconutil ---
+        let iconutilProcess = Process()
+        iconutilProcess.executableURL = URL(fileURLWithPath: "/usr/bin/iconutil")
+        // Passes the dynamically generated path to iconutil
+        iconutilProcess.arguments = ["-c", "icns", iconSetPath, "-o", outputIcnsPath]
+
+        let pipe = Pipe()
+        iconutilProcess.standardOutput = pipe
+        iconutilProcess.standardError = pipe
+
+        do {
+            try iconutilProcess.run()
+            iconutilProcess.waitUntilExit()
+
+            let outputData = pipe.fileHandleForReading.readDataToEndOfFile()
+            let outputString = String(data: outputData, encoding: .utf8) ?? ""
+            print("iconutil output: \(outputString)")
+
+            if iconutilProcess.terminationStatus == 0 {
+                print("Successfully created \(g.selectedImageName).icns at \(outputIcnsPath)")
+                // Optionally update g.outputText
+            } else {
+                let errorData = pipe.fileHandleForReading.readDataToEndOfFile()
+                let errorString = String(data: errorData, encoding: .utf8) ?? ""
+                print("Error running iconutil. Termination status: \(iconutilProcess.terminationStatus), Error: \(errorString)")
+                // Optionally update g.outputText with the error
+            }
+
+        } catch {
+            print("Error running iconutil: \(error)")
+            // Optionally update g.outputText
+        }
+
+    } catch {
+        // Updates the DYNAMIC g.outputText on error
+        print("Error creating iconset directory: \(error)")
     }
-    
-    process.waitUntilExit()
 }
 
 // MAIN CONTENT VIEW TABS
@@ -502,7 +512,7 @@ struct CommonView: View {
                                             let hh = g.enablePadding ? g.imgH - 20 : g.imgH
                                             VStack {
                                                 ZStack {
-                                                    RoundedRectangle(cornerRadius: 27.1)
+                                                    RoundedRectangle(cornerRadius: g.enableRoundedCorners ? 27.1 : 0)
                                                         .frame(width: ww , height: hh)
                                                         .shadow(radius: g.enableIconShadow ? 10 : 0)
                                                     
@@ -562,7 +572,6 @@ struct CommonView: View {
                                         //-------------------------------------------------------------------------------------
                                         // ICON OPTIONS
                                         //-------------------------------------------------------------------------------------
-                                        
                                         if g.selectedImage != nil {
                                             // Toggle for enabling ROUNDED corners
                                             VStack(alignment: .leading, spacing: 1) {
