@@ -14,12 +14,16 @@ Download the app from <a href="https://github.com/alptugan/icns-creator/releases
 <img src="./assets/logo.png" width="10%">
 </p>
 
+
+
 ## DEMO & Instructions & QuickStart
 
 The UI is a lot different with the v1. The following video is still appropriate. icns Creator is a macOS application that allows you to easily create icns files from any PNG or JPG image file. With this tool, you can quickly generate high-quality icns files to use as icons for your macOS applications or generate a single appropriate .iconset file. Codesigning is an headache for me! And I do not want to pay for an app that I release as open-source. You can review the code, if you have concerns about the app. Or simply, you can choose not to use the app 🖖🏻.
 
 [<img src="icns%20creator/yt_cover_2.png" width="100%">](https://youtu.be/nwUu_3UDWjM "Now in Mac OS")
 
+
+<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
 
 ## Features
 
@@ -29,19 +33,43 @@ The UI is a lot different with the v1. The following video is still appropriate.
 - iconset folder and individual .icns file generation.
 - Options to set icon style for Apple design standarts (subtle shadow, corner radius, icon margin area).
 
+<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
+
 ## Installation
+### Option 1. Disable The Gate Keeper (RECOMMENDED)
+1. Download the latest release from the [Releases](https://github.com/alptugan/icns-creator/releases) page.  
 
-### Option 1 (Recommended for non-developers)
-To use icns Creator, follow these steps:
+2. Move the unzipped `icns Creator.app` file to your Applications folder. **DO NOT DOUBLE CLICK.**
 
+3. **Disable the Gate Keeper:** Open the Terminal app on your Mac and run the following command:
+```shell
+sudo spctl --master-disable
+```
+<p style="margin-bottom:20px" align="center">
+    <img src="./assets/icns-install-tut-01.jpeg" width="80%">
+</p>
+
+Choose `Anywhere` option under `System Settings`->`Privacy & Security`->`Security` section.
+
+4. Double-click the `icns Creator.app` file to run it. 
+
+5. You will be prompted with a warning that the app is from an unidentified developer. Click "Open".
+
+<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
+
+### Option 2 (Without disabling the Gate Keeper)
 1. Download the latest release from the [Releases](https://github.com/alptugan/icns-creator/releases) page. 
-2. Since the app is not signed by Apple, your OS does not open the app.You must enable System Settings->Privacy & Security->Security->App Store and identified developers option. Depending on your configuration, you need to disable "Gate keeper" option to install unsigned apps. You can have more information [link](https://www.makeuseof.com/how-to-disable-gatekeeper-mac/)
-3. Unzip the file. DO NOT DOUBLE CLICK. Right-click on icns Creator application file (`icns-creator.app`) to run it.
-3. If prompted, allow the application to run on your system.
-4. You're ready to start creating icns files out of PNG, JPG, or any other image document!
+2. Since the app is not signed by Apple, your OS does not open the app.You must enable 
 
+`System Settings`->`Privacy & Security`->`Security`->`App Store and identified developers` option. 
 
-### Option 2 (For developers)
+3. Unzip the file. Double-click on icns Creator application file (`icns-creator.app`) to run it. It will not open because it is from an unidentified developer. Goto `System Settings`->`Privacy & Security`->`Security` and click `Open Anyway` button.
+4. If prompted, allow the application to run on your system.
+5. You're ready to start creating icns files out of PNG, JPG, or any other image document!
+
+<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
+
+### Option 3 (For developers)
 To build the app by yourself or make modifications on the source code (Optional). If you have issues because of Apple's security issues, or you do not prefer to install compiled apps, you can compile the app by yourself and review the code as well.
 
 1. Install XCode application from Appstore.
@@ -65,6 +93,8 @@ To build the app by yourself or make modifications on the source code (Optional)
     <img src="./assets/icns_dev_tut4.png" width="80%">
 </p>
 
+<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
+
 ## Usage for Designers & Developers
 
 1. Prepare your image file in your preferred image editor, ensuring it has a minimum size of 1024x1024 pixels.
@@ -75,6 +105,7 @@ To build the app by yourself or make modifications on the source code (Optional)
 6. By default shadow, rounded corners and padding for the generated icon is enabled. For recent Mac OS standards, you should enable all of the options to apply Apple Design standarts. If you just want to generate .icns files as before, disable all of the options.
 7. The files will be created in the same directory as the original image file.
 
+<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
 
 ## Contribution
 
@@ -87,24 +118,31 @@ Contributions to icns Creator are welcome! If you would like to contribute to th
 4. Push your changes to your forked repository.
 5. Open a pull request in the main repository, explaining your changes and their benefits.
 
+<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
+
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=alptugan/icns-creator&type=Date)](https://star-history.com/#alptugan/icns-creator&Date)
+
+<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
 
 ## License
 
 icns Creator is released under the [MIT License](https://opensource.org/licenses/MIT). See the [LICENSE](https://github.com/alptugan/icns-creator/blob/main/LICENSE.md) file for more information.
 
+<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
+
 ## Acknowledgements
 
 - The icns Creator app was inspired by the need for a simple and efficient tool to create icns files for macOS applications. 
 
+<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
 
 ## Contact
 
 If you have any questions, suggestions, or feedback, please feel free to use Issues section.
 
-_________________________________________________
+<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
 
 ## To do 
 - [x] ~~App release~~
