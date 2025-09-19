@@ -11,9 +11,6 @@
 		F1F183FD2A84FFE9008913F0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F183FC2A84FFE9008913F0 /* ContentView.swift */; };
 		F1F183FF2A84FFEA008913F0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1F183FE2A84FFEA008913F0 /* Assets.xcassets */; };
 		F1F184022A84FFEA008913F0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1F184012A84FFEA008913F0 /* Preview Assets.xcassets */; };
-		F1F1840D2A84FFEA008913F0 /* icns_creatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F1840C2A84FFEA008913F0 /* icns_creatorTests.swift */; };
-		F1F184172A84FFEA008913F0 /* icns_creatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F184162A84FFEA008913F0 /* icns_creatorUITests.swift */; };
-		F1F184192A84FFEA008913F0 /* icns_creatorUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F184182A84FFEA008913F0 /* icns_creatorUITestsLaunchTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,10 +39,7 @@
 		F1F184012A84FFEA008913F0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F1F184032A84FFEA008913F0 /* icns_creator.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = icns_creator.entitlements; sourceTree = "<group>"; };
 		F1F184082A84FFEA008913F0 /* icns creatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "icns creatorTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		F1F1840C2A84FFEA008913F0 /* icns_creatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = icns_creatorTests.swift; sourceTree = "<group>"; };
 		F1F184122A84FFEA008913F0 /* icns creatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "icns creatorUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		F1F184162A84FFEA008913F0 /* icns_creatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = icns_creatorUITests.swift; sourceTree = "<group>"; };
-		F1F184182A84FFEA008913F0 /* icns_creatorUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = icns_creatorUITestsLaunchTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,8 +71,6 @@
 			isa = PBXGroup;
 			children = (
 				F1F183F92A84FFE9008913F0 /* icns creator */,
-				F1F1840B2A84FFEA008913F0 /* icns creatorTests */,
-				F1F184152A84FFEA008913F0 /* icns creatorUITests */,
 				F1F183F82A84FFE9008913F0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -112,23 +104,6 @@
 				F1F184012A84FFEA008913F0 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		F1F1840B2A84FFEA008913F0 /* icns creatorTests */ = {
-			isa = PBXGroup;
-			children = (
-				F1F1840C2A84FFEA008913F0 /* icns_creatorTests.swift */,
-			);
-			path = "icns creatorTests";
-			sourceTree = "<group>";
-		};
-		F1F184152A84FFEA008913F0 /* icns creatorUITests */ = {
-			isa = PBXGroup;
-			children = (
-				F1F184162A84FFEA008913F0 /* icns_creatorUITests.swift */,
-				F1F184182A84FFEA008913F0 /* icns_creatorUITestsLaunchTests.swift */,
-			);
-			path = "icns creatorUITests";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -195,7 +170,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1630;
+				LastUpgradeCheck = 1640;
 				TargetAttributes = {
 					F1F183F62A84FFE9008913F0 = {
 						CreatedOnToolsVersion = 14.3.1;
@@ -270,7 +245,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1F1840D2A84FFEA008913F0 /* icns_creatorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,8 +252,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1F184192A84FFEA008913F0 /* icns_creatorUITestsLaunchTests.swift in Sources */,
-				F1F184172A84FFEA008913F0 /* icns_creatorUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,6 +385,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Release;
@@ -448,7 +421,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 3.6.3;
+				MARKETING_VERSION = 3.6.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.alptugan.icns-creator";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -488,7 +461,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 3.6.3;
+				MARKETING_VERSION = 3.6.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.alptugan.icns-creator";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

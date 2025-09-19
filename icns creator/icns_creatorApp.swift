@@ -12,7 +12,6 @@
 //                               - Rounded corner preview fixed
 //                               - runShellCommand2() updated. Image generation might be problematic
 
-
 import SwiftUI
 
 
