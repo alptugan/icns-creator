@@ -5,7 +5,7 @@
 <p align="center">・・・・・・・・・・ ༄ ・・・・・・・・・・</p> 
 
 <p align="center">
-Download the app from <a href="https://github.com/alptugan/icns-creator/releases/latest">Releases</a><br>(Requires minimum Mac OS 11.0 - 15.3.1).<br><span style="color:#ffcc00">PLEASE FOLLOW "Installation" instructions.</span>
+Download the app from <a href="https://github.com/alptugan/icns-creator/releases/latest">Releases</a><br>(Requires minimum Mac OS 11.0 - 15.6.1).<br>$${\color{red}{PLEASE FOLLOW "Installation" instructions.}}
 </p>
 
 <img src="assets/icns_creator_v3_cover.jpg" alt="Image shows the three different screen shots of the main app window." width="100%" height="auto" style="border-radius:15px;">
@@ -23,7 +23,8 @@ The UI is a lot different with the v1. The following video is still appropriate.
 [<img src="icns%20creator/yt_cover_2.png" width="100%">](https://youtu.be/nwUu_3UDWjM "Now in Mac OS")
 
 
-<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
+<br/>
+<p align="center"> ⁂ </p>
 
 ## Features
 
@@ -33,7 +34,8 @@ The UI is a lot different with the v1. The following video is still appropriate.
 - iconset folder and individual .icns file generation.
 - Options to set icon style for Apple design standarts (subtle shadow, corner radius, icon margin area).
 
-<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
+<br/>
+<p align="center"> ⁂ </p>
 
 ## Installation
 ### Option 1. Disable The Gate Keeper (RECOMMENDED)
@@ -55,7 +57,8 @@ Choose `Anywhere` option under `System Settings`->`Privacy & Security`->`Securit
 
 5. You will be prompted with a warning that the app is from an unidentified developer. Click "Open".
 
-<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
+<br/>
+<p align="center"> ⁂ </p>
 
 ### Option 2 (Without disabling the Gate Keeper)
 1. Download the latest release from the [Releases](https://github.com/alptugan/icns-creator/releases) page. 
@@ -67,7 +70,8 @@ Choose `Anywhere` option under `System Settings`->`Privacy & Security`->`Securit
 4. If prompted, allow the application to run on your system.
 5. You're ready to start creating icns files out of PNG, JPG, or any other image document!
 
-<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
+<br/>
+<p align="center"> ⁂ </p>
 
 ### Option 3 (For developers)
 To build the app by yourself or make modifications on the source code (Optional). If you have issues because of Apple's security issues, or you do not prefer to install compiled apps, you can compile the app by yourself and review the code as well.
@@ -93,7 +97,8 @@ To build the app by yourself or make modifications on the source code (Optional)
     <img src="./assets/icns_dev_tut4.png" width="80%">
 </p>
 
-<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
+<br/>
+<p align="center"> ⁂ </p>
 
 ## Usage for Designers & Developers
 
@@ -105,7 +110,8 @@ To build the app by yourself or make modifications on the source code (Optional)
 6. By default shadow, rounded corners and padding for the generated icon is enabled. For recent Mac OS standards, you should enable all of the options to apply Apple Design standarts. If you just want to generate .icns files as before, disable all of the options.
 7. The files will be created in the same directory as the original image file.
 
-<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
+<br/>
+<p align="center"> ⁂ </p>
 
 ## Contribution
 
@@ -118,31 +124,36 @@ Contributions to icns Creator are welcome! If you would like to contribute to th
 4. Push your changes to your forked repository.
 5. Open a pull request in the main repository, explaining your changes and their benefits.
 
-<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
+<br/>
+<p align="center"> ⁂ </p>
 
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=alptugan/icns-creator&type=Date)](https://star-history.com/#alptugan/icns-creator&Date)
 
-<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
+<br/>
+<p align="center"> ⁂ </p>
 
 ## License
 
 icns Creator is released under the [MIT License](https://opensource.org/licenses/MIT). See the [LICENSE](https://github.com/alptugan/icns-creator/blob/main/LICENSE.md) file for more information.
 
-<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
+<br/>
+<p align="center"> ⁂ </p>
 
 ## Acknowledgements
 
 - The icns Creator app was inspired by the need for a simple and efficient tool to create icns files for macOS applications. 
 
-<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
+<br/>
+<p align="center"> ⁂ </p>
 
 ## Contact
 
 If you have any questions, suggestions, or feedback, please feel free to use Issues section.
 
-<div style="text-align: center;padding: 40px 0;"> ⁂ </div>
+<br/>
+<p align="center"> ⁂ </p>
 
 ## To do 
 - [x] ~~App release~~
