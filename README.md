@@ -4,9 +4,11 @@
 
 <p align="center">・・・・・・・・・・ ༄ ・・・・・・・・・・</p> 
 
-<p align="center">
-Download the app from <a href="https://github.com/alptugan/icns-creator/releases/latest">Releases</a><br>(Requires minimum Mac OS 11.0 - 15.6.1).<br>$${\color{red}{PLEASE FOLLOW "Installation" instructions.}}
-</p>
+<div align="center">
+Download the app from <a href="https://github.com/alptugan/icns-creator/releases/latest">Releases</a><br>
+(Requires minimum Mac OS 11.0 - 15.6.1).<br>
+<span style="color:#FFD700">PLEASE FOLLOW "Installation" instructions.</span>
+</div>
 
 <img src="assets/icns_creator_v3_cover.jpg" alt="Image shows the three different screen shots of the main app window." width="100%" height="auto" style="border-radius:15px;">
 
