@@ -175,7 +175,13 @@ If you have any questions, suggestions, or feedback, please feel free to use Iss
 - [x] ~~Add preview for changed options~~
 - [x] ~~Destination path dialog~~
 - [x] ~~File name issue. When there is blank space in filename, the process fails. `code solid.svg` - failed. `code-solid.svg` - success.~~
-- [ ] ‼️ Set options for rounded corners: None, Rounded, Circular
+- [ ] ‼️ Set options for rounded corners: None, Rounded, Circular, Tahoe OS
+- [ ] ‼️ Lights around the app icon. Angle
+- [ ] ‼️ Fill the background with a color or a pattern.
+- [ ] ‼️ Set color for the background.
+- [ ] ‼️ Set the size of the imported icon.
+- [ ] ‼️ Set the position of the imported icon.
+- [ ] ‼️ Display the icon grid similart to icon designer.
 - [ ] ‼️ Update YouTube video tutotial.
 - [ ] v4
     - [ ] Drag & drop folders or apps to edit their icns props on the fly for better UX. 
