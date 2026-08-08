@@ -132,7 +132,7 @@ Contributions to icns Creator are welcome! If you would like to contribute to th
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=alptugan/icns-creator&type=Date)](https://star-history.com/#alptugan/icns-creator&Date)
+[![Star History Chart](https://api.star-history.com/chart?repos=alptugan/icns-creator&type=date&legend=top-left&sealed_token=BnV53jHER-xerlG0mOpPjqxhbVe_a_pKvIFvGcS6swStib5QU8iXk6WmEknr6NvWJkpUISgJ1Bs7Ou1Yu0MBWFH4s5QePAWHB6xNi58QkdS_F5V7gurtzx_dvc99QbtlYaKL0UE5oweV6NdVAfrDYjc8PS-ywB48mSETm6Oe-E81MB41aegNZYLIq3d_)](https://www.star-history.com/?repos=alptugan%2Ficns-creator&type=date&legend=top-left)
 
 <br/>
 <p align="center"> ⁂ </p>
